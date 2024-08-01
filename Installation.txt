@@ -1,0 +1,9 @@
+
+
+Install
+pip install mcp23017
+sudo apt-get install git-core
+sudo apt install -y i2c-tools python3-smbus
+pip install python3-smbus
+pip install smbus2
+
