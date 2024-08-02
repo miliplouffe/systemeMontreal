@@ -226,9 +226,9 @@ def arrosageValide():
 def FermerGicleurs():
         print("passe 20")
         redisInOut.publishInterfaceRequete("Gicleur_1_OFF")
-        # redisInOut.publishInterfaceRequete("Gicleur_2_OFF")     
-        # redisInOut.publishInterfaceRequete("Gicleur_3_OFF")     
-        # redisInOut.publishInterfaceRequete("Gicleur_4_OFF")     
+        redisInOut.publishInterfaceRequete("Gicleur_2_OFF")     
+        redisInOut.publishInterfaceRequete("Gicleur_3_OFF")     
+        redisInOut.publishInterfaceRequete("Gicleur_4_OFF")     
         print ("passe 22")
         sleep (.5)
 
@@ -260,7 +260,7 @@ def initialiaseGicleurs(**gicleurs):
     gicleurRec=GICLEURS()
     gicleurRec.NoZone=2
     gicleurRec.ZoneNom="relais2"
-    gicleurRec.ZoneActive=False
+    gicleurRec.ZoneActive=True
     gicleurRec.TempsArrosage=1
     gicleurRec.Affichage=True
     gicleurRec.AffichageWeb=True
@@ -271,7 +271,7 @@ def initialiaseGicleurs(**gicleurs):
     gicleurRec=GICLEURS()
     gicleurRec.NoZone=3
     gicleurRec.ZoneNom="relais3"
-    gicleurRec.ZoneActive=False
+    gicleurRec.ZoneActive=True
     gicleurRec.TempsArrosage=1
     gicleurRec.Affichage=True
     gicleurRec.AffichageWeb=True
@@ -282,7 +282,7 @@ def initialiaseGicleurs(**gicleurs):
     gicleurRec=GICLEURS()
     gicleurRec.NoZone=4
     gicleurRec.ZoneNom="relais4"
-    gicleurRec.ZoneActive=False
+    gicleurRec.ZoneActive=True
     gicleurRec.TempsArrosage=1
     gicleurRec.Affichage=True
     gicleurRec.AffichageWeb=True
@@ -415,42 +415,42 @@ if __name__ == '__main__':
                 # sauvegardeMessageActivites(datetime.now(),dataRec.NoZone, "Set gicleur près pour arrosage")
                 Requete=""
                 redisInOut.setRequeteArrosageNil()
-            # elif Requete == "GicleurSet2":
-            #     dataRec=donneesArrosage["2"]
-            #     dataRec.ArrosageTermine=True
-            #     # sauvegardeMessageActivites(datetime.now(),dataRec.NoZone, "Set gicleur arrosage termine")
-            #     Requete=""
-            #     redisInOut.setRequeteArrosageNil()
-            # elif Requete == "GicleurReSet2":
-            #     dataRec=donneesArrosage["2"]
-            #     dataRec.ArrosageTermine=False
-            #     # sauvegardeMessageActivites(datetime.now(),dataRec.NoZone, "Set gicleur près pour arrosage")
-            #     Requete=""
-            #     redisInOut.setRequeteArrosageNil()
-            # elif Requete == "GicleurSet3":
-            #     dataRec=donneesArrosage["3"]
-            #     dataRec.ArrosageTermine=True
-            #     # sauvegardeMessageActivites(datetime.now(),dataRec.NoZone, "Set gicleur arrosage termine")
-            #     Requete=""
-            #     redisInOut.setRequeteArrosageNil()
-            # elif Requete == "GicleurReSet3":
-            #     dataRec=donneesArrosage["3"]
-            #     dataRec.ArrosageTermine=False
-            #     # sauvegardeMessageActivites(datetime.now(),dataRec.NoZone, "Set gicleur près pour arrosage")
-            #     Requete=""
-            #     redisInOut.setRequeteArrosageNil()
-            # elif Requete == "GicleurSet4":
-            #     dataRec=donneesArrosage["4"]
-            #     dataRec.ArrosageTermine=True
-            #     # sauvegardeMessageActivites(datetime.now(),dataRec.NoZone, "Set gicleur arrosage termine")
-            #     Requete=""
-            #     redisInOut.setRequeteArrosageNil()
-            # elif Requete == "GicleurReSet4":
-            #     dataRec=donneesArrosage["4"]
-            #     dataRec.ArrosageTermine=False
-            #     # sauvegardeMessageActivites(datetime.now(),dataRec.NoZone, "Set gicleur près pour arrosage")
-            #     Requete=""
-            #     redisInOut.setRequeteArrosageNil()
+            elif Requete == "GicleurSet2":
+                dataRec=donneesArrosage["2"]
+                dataRec.ArrosageTermine=True
+                # sauvegardeMessageActivites(datetime.now(),dataRec.NoZone, "Set gicleur arrosage termine")
+                Requete=""
+                redisInOut.setRequeteArrosageNil()
+            elif Requete == "GicleurReSet2":
+                dataRec=donneesArrosage["2"]
+                dataRec.ArrosageTermine=False
+                # sauvegardeMessageActivites(datetime.now(),dataRec.NoZone, "Set gicleur près pour arrosage")
+                Requete=""
+                redisInOut.setRequeteArrosageNil()
+            elif Requete == "GicleurSet3":
+                dataRec=donneesArrosage["3"]
+                dataRec.ArrosageTermine=True
+                # sauvegardeMessageActivites(datetime.now(),dataRec.NoZone, "Set gicleur arrosage termine")
+                Requete=""
+                redisInOut.setRequeteArrosageNil()
+            elif Requete == "GicleurReSet3":
+                dataRec=donneesArrosage["3"]
+                dataRec.ArrosageTermine=False
+                # sauvegardeMessageActivites(datetime.now(),dataRec.NoZone, "Set gicleur près pour arrosage")
+                Requete=""
+                redisInOut.setRequeteArrosageNil()
+            elif Requete == "GicleurSet4":
+                dataRec=donneesArrosage["4"]
+                dataRec.ArrosageTermine=True
+                # sauvegardeMessageActivites(datetime.now(),dataRec.NoZone, "Set gicleur arrosage termine")
+                Requete=""
+                redisInOut.setRequeteArrosageNil()
+            elif Requete == "GicleurReSet4":
+                dataRec=donneesArrosage["4"]
+                dataRec.ArrosageTermine=False
+                # sauvegardeMessageActivites(datetime.now(),dataRec.NoZone, "Set gicleur près pour arrosage")
+                Requete=""
+                redisInOut.setRequeteArrosageNil()
             elif Requete == "Gicleur_1_ON" and ArrosageEnCour==False:
                 redisInOut.publishInterfaceRequete("Gicleur_1_ON")
                 Requete=""
@@ -461,36 +461,36 @@ if __name__ == '__main__':
                 Requete=""
                 redisInOut.setRequeteArrosageNil()
                 # sauvegardeMessageActivites(datetime.now()," Zone 1 ", "Gicleur_1_OFF")
-            # elif Requete == "Gicleur_2_ON" and ArrosageEnCour==False:
-            #     redisInOut.publishInterfaceArduinoRequete("Gicleur2_ON")
-            #     Requete=""
-            #     redisInOut.setRequeteArrosageNil()
-            #     # sauvegardeMessageActivites(datetime.now()," Zone 2 ", "Gicleur_2_ON")
-            # elif Requete == "Gicleur_2_OFF":
-            #     redisInOut.publishInterfaceArduinoRequete("Gicleur_2_OFF")
-            #     Requete=""
-            #     redisInOut.setRequeteArrosageNil()
-            #     # sauvegardeMessageActivites(datetime.now()," Zone 2 ", "Gicleur_2_OFF")
-            # elif Requete == "Gicleur_3_ON" and ArrosageEnCour==False:
-            #     redisInOut.publishInterfaceArduinoRequete("Gicleur_3_ON")
-            #     Requete=""
-            #     redisInOut.setRequeteArrosageNil()
-            #     # sauvegardeMessageActivites(datetime.now()," Zone 3 ", "Gicleur_3_ON")
-            # elif Requete == "Gicleur_3_OFF":
-            #     redisInOut.publishInterfaceArduinoRequete("Gicleur_3_OFF")
-            #     Requete=""
-            #     redisInOut.setRequeteArrosageNil()
-            #     # sauvegardeMessageActivites(datetime.now()," Zone 3 ", "Gicleur_3_OFF")
-            # elif Requete == "Gicleur_4_ON" and ArrosageEnCour==False:
-            #     redisInOut.publishInterfaceArduinoRequete("Gicleur_4_ON")
-            #     Requete=""
-            #     # redisInOut.setRequeteArrosageNil()
-            #     # sauvegardeMessageActivites(datetime.now()," Zone 4 ", "Gicleur_4_ON")
-            # elif Requete == "Gicleur_4_OFF":
-            #     redisInOut.publishInterfaceArduinoRequete("Gicleur_4_OFF")
-            #     Requete=""
-            #     redisInOut.setRequeteArrosageNil()
-            #     # sauvegardeMessageActivites(datetime.now()," Zone 4 ", "Gicleur_4_OFF")
+            elif Requete == "Gicleur_2_ON" and ArrosageEnCour==False:
+                redisInOut.publishInterfaceArduinoRequete("Gicleur2_ON")
+                Requete=""
+                redisInOut.setRequeteArrosageNil()
+                # sauvegardeMessageActivites(datetime.now()," Zone 2 ", "Gicleur_2_ON")
+            elif Requete == "Gicleur_2_OFF":
+                redisInOut.publishInterfaceArduinoRequete("Gicleur_2_OFF")
+                Requete=""
+                redisInOut.setRequeteArrosageNil()
+                # sauvegardeMessageActivites(datetime.now()," Zone 2 ", "Gicleur_2_OFF")
+            elif Requete == "Gicleur_3_ON" and ArrosageEnCour==False:
+                redisInOut.publishInterfaceArduinoRequete("Gicleur_3_ON")
+                Requete=""
+                redisInOut.setRequeteArrosageNil()
+                # sauvegardeMessageActivites(datetime.now()," Zone 3 ", "Gicleur_3_ON")
+            elif Requete == "Gicleur_3_OFF":
+                redisInOut.publishInterfaceArduinoRequete("Gicleur_3_OFF")
+                Requete=""
+                redisInOut.setRequeteArrosageNil()
+                # sauvegardeMessageActivites(datetime.now()," Zone 3 ", "Gicleur_3_OFF")
+            elif Requete == "Gicleur_4_ON" and ArrosageEnCour==False:
+                redisInOut.publishInterfaceArduinoRequete("Gicleur_4_ON")
+                Requete=""
+                # redisInOut.setRequeteArrosageNil()
+                # sauvegardeMessageActivites(datetime.now()," Zone 4 ", "Gicleur_4_ON")
+            elif Requete == "Gicleur_4_OFF":
+                redisInOut.publishInterfaceArduinoRequete("Gicleur_4_OFF")
+                Requete=""
+                redisInOut.setRequeteArrosageNil()
+                # sauvegardeMessageActivites(datetime.now()," Zone 4 ", "Gicleur_4_OFF")
             print ("passe 5")
 
             for rec in donneesArrosage:

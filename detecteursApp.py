@@ -82,6 +82,36 @@ def executeRequete(requete):
         rpiMethodes.set_relais("relais1", False)    
         redisInOut.setRequeteArrosageNil()
 
+    if requete == "Gicleur_2_ON":
+        print ("--------------------- ON")
+        rpiMethodes.set_relais("relais1", True)
+        redisInOut.setRequeteArrosageNil()
+
+    if requete == "Gicleur_2_OFF":
+        print ("-------------------- OFF")
+        rpiMethodes.set_relais("relais1", False)    
+        redisInOut.setRequeteArrosageNil()
+
+    if requete == "Gicleur_3_ON":
+        print ("--------------------- ON")
+        rpiMethodes.set_relais("relais1", True)
+        redisInOut.setRequeteArrosageNil()
+
+    if requete == "Gicleur_3_OFF":
+        print ("-------------------- OFF")
+        rpiMethodes.set_relais("relais1", False)    
+        redisInOut.setRequeteArrosageNil()
+
+    if requete == "Gicleur_4_ON":
+        print ("--------------------- ON")
+        rpiMethodes.set_relais("relais1", True)
+        redisInOut.setRequeteArrosageNil()
+
+    if requete == "Gicleur_4_OFF":
+        print ("-------------------- OFF")
+        rpiMethodes.set_relais("relais1", False)    
+        redisInOut.setRequeteArrosageNil()
+
 
 redisInOut.StartSystemeArrosageRequete()
 
