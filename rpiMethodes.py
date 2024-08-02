@@ -115,8 +115,8 @@ def getAlarmeDetecteur(detecteurAlarme):
 
 def getArrosageDetecteur(gicleursStatut):
     gicleursStatut["1"].statut = get_relais("relais1")
-    gicleursStatut["2"].statut=False
-    gicleursStatut["3"].statut=False
-    gicleursStatut["4"].statut=False
+    gicleursStatut["2"].statut = get_relais("relais2")
+    gicleursStatut["3"].statut = get_relais("relais3")
+    gicleursStatut["4"].statut = get_relais("relais4")
 
     return gicleursStatut
