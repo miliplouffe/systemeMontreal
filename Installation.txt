@@ -6,4 +6,6 @@ sudo apt-get install git-core
 sudo apt install -y i2c-tools python3-smbus
 pip install python3-smbus
 pip install smbus2
-
+Redis
+https://pimylifeup.com/raspberry-pi-redis/
+https://redis.io/docs/latest/operate/oss_and_stack/management/admin/
