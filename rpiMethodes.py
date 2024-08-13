@@ -3,9 +3,11 @@ from time import sleep
 from json import JSONEncoder
 import gpiozero
 from gpiozero import DigitalInputDevice
-from mcp23017 import *
-from smbus2 import SMBus
+import board
+import busio
 
+from digitalio import Direction
+from adafruit_mcp230xx.mcp23017 import MCP23017
 
 class const:
     relais1=23
@@ -13,22 +15,24 @@ class const:
     relais3=25
     relais4=26
 
-    pinChambrePrincipale=GPA0
-    pinChambreSecondaire=GPA1
-    pinBureau=GPA2
-    pinSalon=GPA3
-    pinSousSol=GPA4
-    pinSalleVernis=GPA5
-    pinPorteAvant=GPA6
-    pinPorteArriere=GPA7
-    pinPorteSousSol=GPB0
-    pinSensorFumeeSalleBillard=GPB1
-    pinSensorFumeeAtelier=GPB2
+    pinChambrePrincipale=0
+    pinChambreSecondaire=1
+    pinBureau=2
+    pinSalon=3
+    pinSousSol=4
+    pinSalleVernis=5
+    pinPorteAvant=6
+    pinPorteArriere=7
+    pinPorteSousSol=8
+    pinSensorFumeeSalleBillard=9
+    pinSensorFumeeAtelier=10
+    pinAlarmeSonore=11
+    pinMouvementSalleBillard=12
 
-    pinAlarmeSonore=GPB2
 
-i2c = bus = SMBus(1)  # creates a I2C Object as a wrapper for the SMBus
-mcp = MCP23017(0x20, i2c)   # creates an MCP object with the given address
+
+i2c = busio.I2C(board.SCL, board.SDA)
+mcp = MCP23017(i2c)
 
 
 relais1 = gpiozero.OutputDevice(const.relais1, active_high=False, initial_value=False)
@@ -36,18 +40,53 @@ relais2=  gpiozero.OutputDevice(const.relais2, active_high=False, initial_value=
 relais3=  gpiozero.OutputDevice(const.relais3, active_high=False, initial_value=False)
 relais4=  gpiozero.OutputDevice(const.relais4, active_high=False, initial_value=False)
 
+pinChambrePrincipale = mcp.get_pin(const.pinChambrePrincipale)
+pinChambrePrincipale.direction = Direction.INPUT
+pinChambrePrincipale.pull = Direction.Pull.UP
 
-def initialiseMcp23017():
-    mcp.pin_mode(pinChambrePrincipale,INPUT)
-    mcp.pin_mode(pinBureau,INPUT)
-    mcp.pin_mode(pinSalon,INPUT)
-    mcp.pin_mode(pinSousSol,INPUT)
-    mcp.pin_mode(pinSalleVernis,INPUT)
-    mcp.pin_mode(pinPorteAvant,INPUT)
-    mcp.pin_mode(pinPorteArriere,INPUT)
-    mcp.pin_mode(pinPorteSousSol,INPUT)
-    mcp.pin_mode(pinSensorFumeeSalleBillard,GPB1,INPUT)
-    mcp.pin_mode(pinAlarmeSonore,INPUT)
+pinChambreSecondaire = mcp.get_pin(const.pinChambreSecondaire)
+pinChambreSecondaire.direction = Direction.INPUT
+pinChambreSecondaire.pull = Direction.Pull.UP
+
+pinBureau = mcp.get_pin(const.pinBureau)
+pinBureau.direction = Direction.INPUT
+pinBureau.pull = Direction.Pull.UP
+
+pinSalon = mcp.get_pin(const.pinSalon)
+pinSalon.direction = Direction.INPUT
+pinSalon.pull = Direction.Pull.UP
+
+pinSousSol = mcp.get_pin(const.pinSousSol)
+pinSousSol.direction = Direction.INPUT
+pinSousSol.pull = Direction.Pull.UP
+
+pinMouvementSalleBillard = mcp.get_pin(const.pinMouvementSalleBillard)
+pinMouvementSalleBillard.direction = Direction.INPUT
+pinMouvementSalleBillard.pull = Direction.Pull.UP
+
+pinSalleVernis = mcp.get_pin(const.pinSalleVernis)
+pinSalleVernis.direction = Direction.INPUT
+pinSalleVernis.pull = Direction.Pull.UP
+
+pinPorteAvant = mcp.get_pin(const.pinPorteAvant)
+pinPorteAvant.direction = Direction.INPUT
+pinPorteAvant.pull = Direction.Pull.UP
+
+pinPorteArriere = mcp.get_pin(const.pinPorteArriere)
+pinPorteArriere.direction = Direction.OUTINPUTPUT
+pinPorteArriere.pull = Direction.Pull.UP
+
+pinPorteSousSol = mcp.get_pin(const.pinPorteSousSol)
+pinPorteSousSol.direction = Direction.INPUT
+pinPorteSousSol.pull = Direction.Pull.UP
+
+pinSensorFumeeSalleBillard = mcp.get_pin(const.pinSensorFumeeSalleBillard)
+pinSensorFumeeSalleBillard.direction = Direction.INPUT
+pinSensorFumeeSalleBillard.pull = Direction.Pull.UP
+
+pinAlarmeSonore = mcp.get_pin(const.pinAlarmeSonore)
+pinAlarmeSonore.direction = Direction.INPUT
+pinAlarmeSonore.pull = Direction.Pull.UP
 
 
 
@@ -97,13 +136,25 @@ def set_relais(nomRelais, statut):
 
 def getAlarmeDetecteur(detecteurAlarme):
 
-    detecteurAlarme.MouvChambrePrincipale=mcp.digital_read(const.pinChambrePrincipale)
-    detecteurAlarme.MouvChambreSecondaire=mcp.digital_read(const.pinChambreSecondaire)
-    detecteurAlarme.MouvBureau=mcp.digital_read(const.pinBureau)
-    detecteurAlarme.MouvSalon=mcp.digital_read(const.pinSousSol)
-    detecteurAlarme.MouvSalleBillard=mcp.digital_read(const.pinSalleBillard)
-    detecteurAlarme.MouvSalleVernis=mcp.digital_read(const.pinSalleVernis)
-    detecteurAlarme.InterPorteAvant=mcp.digital_read(const.pinPorteAvant)
+    pinChambrePrincipale=0
+    pinChambreSecondaire=1
+    pinBureau=2
+    pinSalon=3
+    pinSousSol=4
+    pinSalleVernis=5
+    pinPorteAvant=6
+    pinPorteArriere=7
+    pinPorteSousSol=8
+    pinSensorFumeeSalleBillard=9
+    pinSensorFumeeAtelier=10
+    pinAlarmeSonore=11
+    detecteurAlarme.MouvChambrePrincipale=pinChambreSecondaire.value
+    detecteurAlarme.MouvChambreSecondaire=pinChambreSecondaire.value
+    detecteurAlarme.MouvBureau=pinBureau.value
+    detecteurAlarme.MouvSalon=pinSalon.value
+    detecteurAlarme.MouvSalleBillard=pinMouvementSalleBillard.value
+    detecteurAlarme.MouvSalleVernis=pinSalleVernis.value
+    detecteurAlarme.InterPorteAvant=pinPorteAvant.value
     detecteurAlarme.InterPorteArriere=mcp.digital_read(const.pinPorteArriere)
     detecteurAlarme.InterPorteSousSol=mcp.digital_read(const.pinPorteSousSol)
     detecteurAlarme.DectEauAtelier=mcp.digital_read(const.pinChambrePrincipale)
