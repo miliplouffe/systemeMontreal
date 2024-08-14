@@ -11,6 +11,21 @@ import board
 import busio
 import digitalio
 
+class const:
+    pinChambrePrincipale=0
+    pinChambreSecondaire=1
+    pinBureau=2
+    pinSalon=3
+    pinSousSol=4
+    pinSalleVernis=5
+    pinPorteAvant=6
+    pinPorteArriere=7
+    pinPorteSousSol=8
+    pinSensorFumeeSalleBillard = 9
+    pinEauAtelier=10
+    pinSensorFumeeAtelier=11
+    pinSensorPluie = 12
+
 # from adafruit_mcp230xx.mcp23008 import MCP23008
 
 from adafruit_mcp230xx.mcp23017 import MCP23017
@@ -22,7 +37,7 @@ i2c = busio.I2C(board.SCL, board.SDA)
 # Create an instance of either the MCP23008 or MCP23017 class depending on
 # which chip you're using:
 # mcp = MCP23008(i2c)  # MCP23008
-mcp = MCP23017(i2c, address=0x27)  # MCP23017
+mcp = MCP23017(i2c, address=0x20)  # MCP23017
 
 # Optionally change the address of the device if you set any of the A0, A1, A2
 # pins.  Specify the new address with a keyword parameter:
@@ -35,15 +50,65 @@ mcp = MCP23017(i2c, address=0x27)  # MCP23017
 # to 7 for the GP0...GP7 pins.  For the MCP23017 you specify a pin number from
 # 0 to 15 for the GPIOA0...GPIOA7, GPIOB0...GPIOB7 pins (i.e. pin 12 is GPIOB4).
 # pin0 = mcp.get_pin(0)
-pin1 = mcp.get_pin(7)
 
-# Setup pin0 as an output that's at a high logic level.
-# pin0.switch_to_output(value=True)
+# pin1 = mcp.get_pin(7)
 
-# Setup pin1 as an input with a pull-up resistor enabled.  Notice you can also
-# use properties to change this state.
-pin1.direction = digitalio.Direction.INPUT
-pin1.pull = digitalio.Pull.UP
+pinChambrePrincipale = mcp.get_pin(const.pinChambrePrincipale)
+pinChambrePrincipale.direction = digitalio.Direction.INPUT
+pinChambrePrincipale.pull = digitalio.Pull.UP
+
+pinChambreSecondaire = mcp.get_pin(const.pinChambreSecondaire)
+pinChambreSecondaire.direction = digitalio.Direction.INPUT
+pinChambreSecondaire.pull = digitalio.Pull.UP
+
+pinBureau = mcp.get_pin(const.pinBureau)
+pinBureau.direction = digitalio.Direction.INPUT
+pinBureau.pull = digitalio.Pull.UP
+
+pinSalon = mcp.get_pin(const.pinSalon)
+pinSalon.direction = digitalio.Direction.INPUT
+pinSalon.pull = digitalio.Pull.UP
+
+pinSousSol = mcp.get_pin(const.pinSousSol)
+pinSousSol.direction = digitalio.Direction.INPUT
+pinSousSol.pull = digitalio.Pull.UP
+
+pinSalleVernis = mcp.get_pin(const.pinSalleVernis)
+pinSalleVernis.direction = digitalio.Direction.INPUT
+pinSalleVernis.pull = digitalio.Pull.UP
+
+pinPorteAvant = mcp.get_pin(const.pinPorteAvant)
+pinPorteAvant.direction = digitalio.Direction.INPUT
+pinPorteAvant.pull = digitalio.Pull.UP
+
+pinPorteArriere = mcp.get_pin(const.pinPorteArriere)
+pinPorteArriere.direction = digitalio.Direction.INPUT
+pinPorteArriere.pull = digitalio.Pull.UP
+
+pinPorteSousSol = mcp.get_pin(const.pinPorteSousSol)
+pinPorteSousSol.direction = digitalio.Direction.INPUT
+pinPorteSousSol.pull = digitalio.Pull.UP
+
+pinSensorFumeeSalleBillard = mcp.get_pin(const.pinSensorFumeeSalleBillard)
+pinSensorFumeeSalleBillard.direction = digitalio.Direction.INPUT
+pinSensorFumeeSalleBillard.pull = digitalio.Pull.UP
+
+pinSensorFumeeSalleBillard = mcp.get_pin(const.pinSensorFumeeSalleBillard)
+pinSensorFumeeSalleBillard.direction = digitalio.Direction.INPUT
+pinSensorFumeeSalleBillard.pull = digitalio.Pull.UP
+
+pinEauAtelier = mcp.get_pin(const.pinEauAtelier)
+pinEauAtelier.direction = digitalio.Direction.INPUT
+pinEauAtelier.pull = digitalio.Pull.UP
+
+pinSensorFumeeAtelier = mcp.get_pin(const.pinSensorFumeeAtelier)
+pinSensorFumeeAtelier.direction = digitalio.Direction.INPUT
+pinSensorFumeeAtelier.pull = digitalio.Pull.UP
+
+pinSensorPluie = mcp.get_pin(const.pinSensorPluie)
+pinSensorPluie.direction = digitalio.Direction.INPUT
+pinSensorPluie.pull = digitalio.Pull.UP
+
 
 # Now loop blinking the pin 0 output and reading the state of pin 1 input.
 while True:
@@ -53,4 +118,4 @@ while True:
     # pin0.value = False
     time.sleep(0.1)
     # Read pin 1 and print its state.
-    print("Pin 1 is at a high level: {0}".format(pin1.value))
+    print("Pin 1 is at a high level: {0}".format(pinChambrePrincipale.value))
