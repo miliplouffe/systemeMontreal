@@ -10,6 +10,14 @@ import time
 import board
 import busio
 import digitalio
+from dataclasses import dataclass
+from datetime import datetime, timedelta
+from gpiozero import LED
+from time import sleep
+
+led = LED(17)
+led.on()
+
 
 class const:
     pinChambrePrincipale=0
@@ -25,10 +33,25 @@ class const:
     pinEauAtelier=10
     pinSensorFumeeAtelier=11
     pinSensorPluie = 12
+    pinGicleur1 = 23
+    pinGicleur2 = 24
+    pinGicleur3 = 25
+    pinGicleur4 = 26
+
+
+@dataclass
+class EQUIPEMENT:
+    heureLecture: datetime = datetime.now()
+    nomEquipement: str = ""
+    valeur: int = 0
 
 # from adafruit_mcp230xx.mcp23008 import MCP23008
 
 from adafruit_mcp230xx.mcp23017 import MCP23017
+
+equipementsAlarmes = dict ()
+equipementsGicleurs = dict()
+
 
 
 # Initialize the I2C bus:
@@ -110,12 +133,171 @@ pinSensorPluie.direction = digitalio.Direction.INPUT
 pinSensorPluie.pull = digitalio.Pull.UP
 
 
-# Now loop blinking the pin 0 output and reading the state of pin 1 input.
-while True:
-    # Blink pin 0 on and then off.
-    # pin0.value = True
-    time.sleep(0.1)
-    # pin0.value = False
-    time.sleep(0.1)
-    # Read pin 1 and print its state.
-    print("Pin 1 is at a high level: {0}".format(pinChambrePrincipale.value))
+gicleur1 = LED(const.pinGicleur1)
+gicleur1.off()
+
+gicleur2 = LED(const.pinGicleur2)
+gicleur2.off()
+
+gicleur3 = LED(const.pinGicleur3)
+gicleur3.off()
+
+gicleur4 = LED(const.pinGicleur4)
+gicleur4.off()
+
+
+def initialiseGicleurs(**equipementsGicleurs):
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinGicleur1"
+    temp.valeur=0 
+    equipementsGicleurs[temp.nomEquipement]=temp
+
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinGicleur2"
+    temp.valeur=0 
+    equipementsGicleurs[temp.nomEquipement]=temp
+
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinGicleur3"
+    temp.valeur=0 
+    equipementsGicleurs[temp.nomEquipement]=temp
+
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinGicleur4"
+    temp.valeur=0 
+    equipementsGicleurs[temp.nomEquipement]=temp
+    
+    return equipementsGicleurs
+
+
+def initialiseAlarmes(**equipementsAlarmes):
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinChambrePrincipale"
+    temp.valeur=0 
+    equipementsAlarmes[temp.nomEquipement]=temp
+
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinChambreSecondaire"
+    temp.valeur=0 
+    equipementsAlarmes[temp.nomEquipement]=temp
+
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinSalon"
+    temp.valeur=0 
+    equipementsAlarmes[temp.nomEquipement]=temp
+
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinBureau"
+    temp.valeur=0 
+    equipementsAlarmes[temp.nomEquipement]=temp
+
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinSousSol"
+    temp.valeur=0 
+    equipementsAlarmes[temp.nomEquipement]=temp
+
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinSalleVernis"
+    temp.valeur=0 
+    equipementsAlarmes[temp.nomEquipement]=temp
+
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinPorteAvant"
+    temp.valeur=0 
+    equipementsAlarmes[temp.nomEquipement]=temp
+
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinPorteArriere"
+    temp.valeur=0 
+    equipementsAlarmes[temp.nomEquipement]=temp
+
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinPorteSousSol"
+    temp.valeur=0 
+    equipementsAlarmes[temp.nomEquipement]=temp
+
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinSensorFumeeSalleBillard"
+    temp.valeur=0 
+    equipementsAlarmes[temp.nomEquipement]=temp
+
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinEauAtelier"
+    temp.valeur=0 
+    equipementsAlarmes[temp.nomEquipement]=temp
+
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinSensorFumeeAtelier"
+    temp.valeur=0 
+    equipementsAlarmes[temp.nomEquipement]=temp
+
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinSensorPluie"
+    temp.valeur=0 
+    equipementsAlarmes[temp.nomEquipement]=temp
+
+    return equipementsAlarmes
+
+
+def getValeursAlarme(**equipementsAlarmes):
+    equipementsAlarmes["pinChambrePrincipale"]=pinChambrePrincipale.value
+    equipementsAlarmes["pinBureau"].valeur=pinBureau.value
+    equipementsAlarmes["pinSalon"].valeur=pinSalon.value
+    equipementsAlarmes["pinSousSol"].valeur=pinSousSol.value
+    equipementsAlarmes["pinSalleVernis"].valeur=pinSalleVernis.value
+    equipementsAlarmes["pinPorteAvant"].valeur=pinPorteAvant.value
+    equipementsAlarmes["pinPorteArriere"].valeur=pinPorteArriere.value
+    equipementsAlarmes["pinPorteSousSol"].valeur=pinPorteSousSol.value
+    equipementsAlarmes["pinSensorFumeeSalleBillard"].valeur=pinSensorFumeeSalleBillard.value
+    equipementsAlarmes["pinEauAtelier"].valeur=pinEauAtelier.value
+    equipementsAlarmes["pinSensorFumeeAtelier"].valeur=pinSensorFumeeAtelier.value
+    equipementsAlarmes["pinSensorPluie"].valeur=pinSensorPluie.value
+
+    return equipementsAlarmes
+
+def getValeursGicleurs(**equipementsGicleurs):
+
+    equipementsGicleurs["pinGicleur1"].valeur=gicleur1.value
+    equipementsGicleurs["pinGicleur2"].valeur=gicleur2.value
+    equipementsGicleurs["pinGicleur3"].valeur=gicleur3.value
+    equipementsGicleurs["pinGicleur4"].valeur=gicleur4.value
+
+    return equipementsGicleurs
+
+if __name__ == '__main__':
+    equipementsAlarmes = initialiseAlarmes(**equipementsAlarmes)
+    equipementsGicleurs = initialiseGicleurs(**equipementsGicleurs)
+
+    # Now loop blinking the pin 0 output and reading the state of pin 1 input.
+    sleep(10)
+    while True:
+        # Blink pin 0 on and then off.
+        # pin0.value = True
+        time.sleep(0.1)
+        # pin0.value = False
+        time.sleep(0.1)
+        # Read pin 1 and print its state.
+        print("Pin 1 is at a high level: {0}".format(pinChambrePrincipale.value))
+        print (" -------------- ", gicleur1.value)
+        gicleur1.on()
+        print (" -------------- ", gicleur1.value)
+        equipementsAlarmes["pinChambrePrincipale"]=pinChambrePrincipale.value
+        equipementsAlarmes=getValeursAlarme(**equipementsAlarmes)
+        equipementsGicleurs=getValeursGicleurs(**equipementsGicleurs)
