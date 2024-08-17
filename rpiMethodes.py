@@ -39,20 +39,7 @@ class const:
     pinGicleur4 = 26
 
 
-@dataclass
-class EQUIPEMENT:
-    heureLecture: datetime = datetime.now()
-    nomEquipement: str = ""
-    valeur: int = 0
-
-# from adafruit_mcp230xx.mcp23008 import MCP23008
-
 from adafruit_mcp230xx.mcp23017 import MCP23017
-
-equipementsAlarmes = dict ()
-equipementsGicleurs = dict()
-
-
 
 # Initialize the I2C bus:
 i2c = busio.I2C(board.SCL, board.SDA)
@@ -146,133 +133,22 @@ gicleur4 = LED(const.pinGicleur4)
 gicleur4.off()
 
 
-def initialiseGicleurs(**equipementsGicleurs):
-    temp = EQUIPEMENT()
-    temp.heureLecture = datetime.now()
-    temp.nomEquipement = "pinGicleur1"
-    temp.valeur=0 
-    equipementsGicleurs[temp.nomEquipement]=temp
-
-    temp = EQUIPEMENT()
-    temp.heureLecture = datetime.now()
-    temp.nomEquipement = "pinGicleur2"
-    temp.valeur=0 
-    equipementsGicleurs[temp.nomEquipement]=temp
-
-    temp = EQUIPEMENT()
-    temp.heureLecture = datetime.now()
-    temp.nomEquipement = "pinGicleur3"
-    temp.valeur=0 
-    equipementsGicleurs[temp.nomEquipement]=temp
-
-    temp = EQUIPEMENT()
-    temp.heureLecture = datetime.now()
-    temp.nomEquipement = "pinGicleur4"
-    temp.valeur=0 
-    equipementsGicleurs[temp.nomEquipement]=temp
-    
-    return equipementsGicleurs
-
-
-def initialiseAlarmes(**equipementsAlarmes):
-    temp = EQUIPEMENT()
-    temp.heureLecture = datetime.now()
-    temp.nomEquipement = "pinChambrePrincipale"
-    temp.valeur=0 
-    equipementsAlarmes[temp.nomEquipement]=temp
-
-    temp = EQUIPEMENT()
-    temp.heureLecture = datetime.now()
-    temp.nomEquipement = "pinChambreSecondaire"
-    temp.valeur=0 
-    equipementsAlarmes[temp.nomEquipement]=temp
-
-    temp = EQUIPEMENT()
-    temp.heureLecture = datetime.now()
-    temp.nomEquipement = "pinSalon"
-    temp.valeur=0 
-    equipementsAlarmes[temp.nomEquipement]=temp
-
-    temp = EQUIPEMENT()
-    temp.heureLecture = datetime.now()
-    temp.nomEquipement = "pinBureau"
-    temp.valeur=0 
-    equipementsAlarmes[temp.nomEquipement]=temp
-
-    temp = EQUIPEMENT()
-    temp.heureLecture = datetime.now()
-    temp.nomEquipement = "pinSousSol"
-    temp.valeur=0 
-    equipementsAlarmes[temp.nomEquipement]=temp
-
-    temp = EQUIPEMENT()
-    temp.heureLecture = datetime.now()
-    temp.nomEquipement = "pinSalleVernis"
-    temp.valeur=0 
-    equipementsAlarmes[temp.nomEquipement]=temp
-
-    temp = EQUIPEMENT()
-    temp.heureLecture = datetime.now()
-    temp.nomEquipement = "pinPorteAvant"
-    temp.valeur=0 
-    equipementsAlarmes[temp.nomEquipement]=temp
-
-    temp = EQUIPEMENT()
-    temp.heureLecture = datetime.now()
-    temp.nomEquipement = "pinPorteArriere"
-    temp.valeur=0 
-    equipementsAlarmes[temp.nomEquipement]=temp
-
-    temp = EQUIPEMENT()
-    temp.heureLecture = datetime.now()
-    temp.nomEquipement = "pinPorteSousSol"
-    temp.valeur=0 
-    equipementsAlarmes[temp.nomEquipement]=temp
-
-    temp = EQUIPEMENT()
-    temp.heureLecture = datetime.now()
-    temp.nomEquipement = "pinSensorFumeeSalleBillard"
-    temp.valeur=0 
-    equipementsAlarmes[temp.nomEquipement]=temp
-
-    temp = EQUIPEMENT()
-    temp.heureLecture = datetime.now()
-    temp.nomEquipement = "pinEauAtelier"
-    temp.valeur=0 
-    equipementsAlarmes[temp.nomEquipement]=temp
-
-    temp = EQUIPEMENT()
-    temp.heureLecture = datetime.now()
-    temp.nomEquipement = "pinSensorFumeeAtelier"
-    temp.valeur=0 
-    equipementsAlarmes[temp.nomEquipement]=temp
-
-    temp = EQUIPEMENT()
-    temp.heureLecture = datetime.now()
-    temp.nomEquipement = "pinSensorPluie"
-    temp.valeur=0 
-    equipementsAlarmes[temp.nomEquipement]=temp
-
+def getValeursAlarme(equipementsAlarmes):
+    equipementsAlarmes["pinChambrePrincipale"]= pinChambrePrincipale.value
+    equipementsAlarmes["pinBureau"]= pinBureau.value
+    equipementsAlarmes["pinSalon"]= pinSalon.value
+    equipementsAlarmes["pinSousSol"]= pinSousSol.value
+    equipementsAlarmes["pinSalleVernis"]= pinSalleVernis.value
+    equipementsAlarmes["pinPorteAvant"]= pinPorteAvant.value
+    equipementsAlarmes["pinPorteArriere"]= pinPorteArriere.value
+    equipementsAlarmes["pinPorteSousSol"]= pinPorteSousSol.value
+    equipementsAlarmes["pinSensorFumeeSalleBillard"]= pinSensorFumeeSalleBillard.value
+    equipementsAlarmes["pinEauAtelier"]= pinEauAtelier.value
+    equipementsAlarmes["pinSensorPluie"]= pinSensorPluie.value
+   
     return equipementsAlarmes
 
-
-def getValeursAlarme(**equipementsAlarmes):
-    equipementsAlarmes["pinChambrePrincipale"]=pinChambrePrincipale.value
-    equipementsAlarmes["pinBureau"].valeur=pinBureau.value
-    equipementsAlarmes["pinSalon"].valeur=pinSalon.value
-    equipementsAlarmes["pinSousSol"].valeur=pinSousSol.value
-    equipementsAlarmes["pinSalleVernis"].valeur=pinSalleVernis.value
-    equipementsAlarmes["pinPorteAvant"].valeur=pinPorteAvant.value
-    equipementsAlarmes["pinPorteArriere"].valeur=pinPorteArriere.value
-    equipementsAlarmes["pinPorteSousSol"].valeur=pinPorteSousSol.value
-    equipementsAlarmes["pinSensorFumeeSalleBillard"].valeur=pinSensorFumeeSalleBillard.value
-    equipementsAlarmes["pinEauAtelier"].valeur=pinEauAtelier.value
-    equipementsAlarmes["pinSensorFumeeAtelier"].valeur=pinSensorFumeeAtelier.value
-    equipementsAlarmes["pinSensorPluie"].valeur=pinSensorPluie.value
-
-    return equipementsAlarmes
-
-def getValeursGicleurs(**equipementsGicleurs):
+def getValeursGicleurs(equipementsGicleurs):
 
     equipementsGicleurs["pinGicleur1"].valeur=gicleur1.value
     equipementsGicleurs["pinGicleur2"].valeur=gicleur2.value
