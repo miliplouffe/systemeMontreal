@@ -1,20 +1,25 @@
-import sys, os
-from time import sleep
-from json import JSONEncoder
-import gpiozero
-from gpiozero import DigitalInputDevice
+# SPDX-FileCopyrightText: 2017 Tony DiCola for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
+
+# Simple demo of reading and writing the digital I/O of the MCP2300xx as if
+# they were native CircuitPython digital inputs/outputs.
+# Author: Tony DiCola
+import time
+
 import board
 import busio
+import digitalio
+from dataclasses import dataclass
+from datetime import datetime, timedelta
+from gpiozero import LED
+from time import sleep
 
-from digitalio import Direction
-from adafruit_mcp230xx.mcp23017 import MCP23017
+led = LED(17)
+led.on()
+
 
 class const:
-    relais1=23
-    relais2=24
-    relais3=25
-    relais4=26
-
     pinChambrePrincipale=0
     pinChambreSecondaire=1
     pinBureau=2
@@ -24,150 +29,254 @@ class const:
     pinPorteAvant=6
     pinPorteArriere=7
     pinPorteSousSol=8
-    pinSensorFumeeSalleBillard=9
-    pinSensorFumeeAtelier=10
-    pinAlarmeSonore=11
-    pinMouvementSalleBillard=12
+    pinSensorFumeeSalleBillard = 9
+    pinEauAtelier=10
+    pinSensorFumeeAtelier=11
+    pinSensorPluie = 12
+    pinGicleur1 = 23
+    pinGicleur2 = 24
+    pinGicleur3 = 25
+    pinGicleur4 = 26
+
+
+@dataclass
+class EQUIPEMENT:
+    heureLecture: datetime = datetime.now()
+    nomEquipement: str = ""
+    valeur: int = 0
+
+# from adafruit_mcp230xx.mcp23008 import MCP23008
+
+from adafruit_mcp230xx.mcp23017 import MCP23017
+
+equipementsAlarmes = dict ()
+equipementsGicleurs = dict()
 
 
 
+# Initialize the I2C bus:
 i2c = busio.I2C(board.SCL, board.SDA)
-mcp = MCP23017(i2c)
 
+# Create an instance of either the MCP23008 or MCP23017 class depending on
+# which chip you're using:
+# mcp = MCP23008(i2c)  # MCP23008
+mcp = MCP23017(i2c, address=0x20)  # MCP23017
 
-relais1 = gpiozero.OutputDevice(const.relais1, active_high=False, initial_value=False)
-relais2=  gpiozero.OutputDevice(const.relais2, active_high=False, initial_value=False)
-relais3=  gpiozero.OutputDevice(const.relais3, active_high=False, initial_value=False)
-relais4=  gpiozero.OutputDevice(const.relais4, active_high=False, initial_value=False)
+# Optionally change the address of the device if you set any of the A0, A1, A2
+# pins.  Specify the new address with a keyword parameter:
+# mcp = MCP23017(i2c, address=0x21)  # MCP23017 w/ A0 set
+
+# Now call the get_pin function to get an instance of a pin on the chip.
+# This instance will act just like a digitalio.DigitalInOut class instance
+# and has all the same properties and methods (except you can't set pull-down
+# resistors, only pull-up!).  For the MCP23008 you specify a pin number from 0
+# to 7 for the GP0...GP7 pins.  For the MCP23017 you specify a pin number from
+# 0 to 15 for the GPIOA0...GPIOA7, GPIOB0...GPIOB7 pins (i.e. pin 12 is GPIOB4).
+# pin0 = mcp.get_pin(0)
+
+# pin1 = mcp.get_pin(7)
 
 pinChambrePrincipale = mcp.get_pin(const.pinChambrePrincipale)
-pinChambrePrincipale.direction = Direction.INPUT
-pinChambrePrincipale.pull = Direction.Pull.UP
+pinChambrePrincipale.direction = digitalio.Direction.INPUT
+pinChambrePrincipale.pull = digitalio.Pull.UP
 
 pinChambreSecondaire = mcp.get_pin(const.pinChambreSecondaire)
-pinChambreSecondaire.direction = Direction.INPUT
-pinChambreSecondaire.pull = Direction.Pull.UP
+pinChambreSecondaire.direction = digitalio.Direction.INPUT
+pinChambreSecondaire.pull = digitalio.Pull.UP
 
 pinBureau = mcp.get_pin(const.pinBureau)
-pinBureau.direction = Direction.INPUT
-pinBureau.pull = Direction.Pull.UP
+pinBureau.direction = digitalio.Direction.INPUT
+pinBureau.pull = digitalio.Pull.UP
 
 pinSalon = mcp.get_pin(const.pinSalon)
-pinSalon.direction = Direction.INPUT
-pinSalon.pull = Direction.Pull.UP
+pinSalon.direction = digitalio.Direction.INPUT
+pinSalon.pull = digitalio.Pull.UP
 
 pinSousSol = mcp.get_pin(const.pinSousSol)
-pinSousSol.direction = Direction.INPUT
-pinSousSol.pull = Direction.Pull.UP
-
-pinMouvementSalleBillard = mcp.get_pin(const.pinMouvementSalleBillard)
-pinMouvementSalleBillard.direction = Direction.INPUT
-pinMouvementSalleBillard.pull = Direction.Pull.UP
+pinSousSol.direction = digitalio.Direction.INPUT
+pinSousSol.pull = digitalio.Pull.UP
 
 pinSalleVernis = mcp.get_pin(const.pinSalleVernis)
-pinSalleVernis.direction = Direction.INPUT
-pinSalleVernis.pull = Direction.Pull.UP
+pinSalleVernis.direction = digitalio.Direction.INPUT
+pinSalleVernis.pull = digitalio.Pull.UP
 
 pinPorteAvant = mcp.get_pin(const.pinPorteAvant)
-pinPorteAvant.direction = Direction.INPUT
-pinPorteAvant.pull = Direction.Pull.UP
+pinPorteAvant.direction = digitalio.Direction.INPUT
+pinPorteAvant.pull = digitalio.Pull.UP
 
 pinPorteArriere = mcp.get_pin(const.pinPorteArriere)
-pinPorteArriere.direction = Direction.OUTINPUTPUT
-pinPorteArriere.pull = Direction.Pull.UP
+pinPorteArriere.direction = digitalio.Direction.INPUT
+pinPorteArriere.pull = digitalio.Pull.UP
 
 pinPorteSousSol = mcp.get_pin(const.pinPorteSousSol)
-pinPorteSousSol.direction = Direction.INPUT
-pinPorteSousSol.pull = Direction.Pull.UP
+pinPorteSousSol.direction = digitalio.Direction.INPUT
+pinPorteSousSol.pull = digitalio.Pull.UP
 
 pinSensorFumeeSalleBillard = mcp.get_pin(const.pinSensorFumeeSalleBillard)
-pinSensorFumeeSalleBillard.direction = Direction.INPUT
-pinSensorFumeeSalleBillard.pull = Direction.Pull.UP
+pinSensorFumeeSalleBillard.direction = digitalio.Direction.INPUT
+pinSensorFumeeSalleBillard.pull = digitalio.Pull.UP
 
-pinAlarmeSonore = mcp.get_pin(const.pinAlarmeSonore)
-pinAlarmeSonore.direction = Direction.INPUT
-pinAlarmeSonore.pull = Direction.Pull.UP
+pinSensorFumeeSalleBillard = mcp.get_pin(const.pinSensorFumeeSalleBillard)
+pinSensorFumeeSalleBillard.direction = digitalio.Direction.INPUT
+pinSensorFumeeSalleBillard.pull = digitalio.Pull.UP
+
+pinEauAtelier = mcp.get_pin(const.pinEauAtelier)
+pinEauAtelier.direction = digitalio.Direction.INPUT
+pinEauAtelier.pull = digitalio.Pull.UP
+
+pinSensorFumeeAtelier = mcp.get_pin(const.pinSensorFumeeAtelier)
+pinSensorFumeeAtelier.direction = digitalio.Direction.INPUT
+pinSensorFumeeAtelier.pull = digitalio.Pull.UP
+
+pinSensorPluie = mcp.get_pin(const.pinSensorPluie)
+pinSensorPluie.direction = digitalio.Direction.INPUT
+pinSensorPluie.pull = digitalio.Pull.UP
 
 
+gicleur1 = LED(const.pinGicleur1)
+gicleur1.off()
 
-def get_relais(nomRelais):
-    global relais1, relais2, relais3, relais4
+gicleur2 = LED(const.pinGicleur2)
+gicleur2.off()
 
-    valeur=False
+gicleur3 = LED(const.pinGicleur3)
+gicleur3.off()
 
-    if nomRelais=="relais1":
-       valeur= relais1.value
-    if nomRelais=="relais2":
-        valeur= relais2.value
-    if nomRelais=="relais3":
-        valeur= relais3.value            
-    if nomRelais=="relais4":
-        valeur= relais4.value
+gicleur4 = LED(const.pinGicleur4)
+gicleur4.off()
+
+
+def initialiseGicleurs(**equipementsGicleurs):
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinGicleur1"
+    temp.valeur=0 
+    equipementsGicleurs[temp.nomEquipement]=temp
+
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinGicleur2"
+    temp.valeur=0 
+    equipementsGicleurs[temp.nomEquipement]=temp
+
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinGicleur3"
+    temp.valeur=0 
+    equipementsGicleurs[temp.nomEquipement]=temp
+
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinGicleur4"
+    temp.valeur=0 
+    equipementsGicleurs[temp.nomEquipement]=temp
     
-    return valeur
-
-def set_relais(nomRelais, statut):
-    global relais1, relais2, relais3, relais4
-
-    if statut==True:
-        print ("statut True")
-        if nomRelais =="relais1":
-            print ("relais on")
-            relais1.on()
-        if nomRelais =="relais2":
-            relais2.on()        
-        if nomRelais =="relais3":
-            relais3.on()
-        if nomRelais =="relais4":
-            relais4.on()            
-    else:
-        if nomRelais =="relais1":
-            print ("relais off")
-            relais1.off()
-        if nomRelais =="relais2":
-            relais2.off()
-        if nomRelais =="relais3":
-            relais3.off()
-        if nomRelais =="relais4":
-            relais4.off()
+    return equipementsGicleurs
 
 
-    PanneElectrique: float = 0.0
+def initialiseAlarmes(**equipementsAlarmes):
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinChambrePrincipale"
+    temp.valeur=0 
+    equipementsAlarmes[temp.nomEquipement]=temp
 
-def getAlarmeDetecteur(detecteurAlarme):
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinChambreSecondaire"
+    temp.valeur=0 
+    equipementsAlarmes[temp.nomEquipement]=temp
 
-    pinChambrePrincipale=0
-    pinChambreSecondaire=1
-    pinBureau=2
-    pinSalon=3
-    pinSousSol=4
-    pinSalleVernis=5
-    pinPorteAvant=6
-    pinPorteArriere=7
-    pinPorteSousSol=8
-    pinSensorFumeeSalleBillard=9
-    pinSensorFumeeAtelier=10
-    pinAlarmeSonore=11
-    detecteurAlarme.MouvChambrePrincipale=pinChambreSecondaire.value
-    detecteurAlarme.MouvChambreSecondaire=pinChambreSecondaire.value
-    detecteurAlarme.MouvBureau=pinBureau.value
-    detecteurAlarme.MouvSalon=pinSalon.value
-    detecteurAlarme.MouvSalleBillard=pinMouvementSalleBillard.value
-    detecteurAlarme.MouvSalleVernis=pinSalleVernis.value
-    detecteurAlarme.InterPorteAvant=pinPorteAvant.value
-    detecteurAlarme.InterPorteArriere=mcp.digital_read(const.pinPorteArriere)
-    detecteurAlarme.InterPorteSousSol=mcp.digital_read(const.pinPorteSousSol)
-    detecteurAlarme.DectEauAtelier=mcp.digital_read(const.pinChambrePrincipale)
-    detecteurAlarme.DectEauSalleLavage=mcp.digital_read(const.pinChambrePrincipale)
-    detecteurAlarme.DectFumeeAtelier=mcp.digital_read(const.pinSensorFumeeAtelier)
-    detecteurAlarme.DectFumeeSalleBillard=mcp.digital_read(const.pinSensorFumeeSalleBillard)
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinSalon"
+    temp.valeur=0 
+    equipementsAlarmes[temp.nomEquipement]=temp
 
-    return detecteurAlarme
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinBureau"
+    temp.valeur=0 
+    equipementsAlarmes[temp.nomEquipement]=temp
 
-def getArrosageDetecteur(gicleursStatut):
-    gicleursStatut["1"].statut = get_relais("relais1")
-    gicleursStatut["2"].statut = get_relais("relais2")
-    gicleursStatut["3"].statut = get_relais("relais3")
-    gicleursStatut["4"].statut = get_relais("relais4")
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinSousSol"
+    temp.valeur=0 
+    equipementsAlarmes[temp.nomEquipement]=temp
 
-    return gicleursStatut
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinSalleVernis"
+    temp.valeur=0 
+    equipementsAlarmes[temp.nomEquipement]=temp
+
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinPorteAvant"
+    temp.valeur=0 
+    equipementsAlarmes[temp.nomEquipement]=temp
+
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinPorteArriere"
+    temp.valeur=0 
+    equipementsAlarmes[temp.nomEquipement]=temp
+
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinPorteSousSol"
+    temp.valeur=0 
+    equipementsAlarmes[temp.nomEquipement]=temp
+
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinSensorFumeeSalleBillard"
+    temp.valeur=0 
+    equipementsAlarmes[temp.nomEquipement]=temp
+
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinEauAtelier"
+    temp.valeur=0 
+    equipementsAlarmes[temp.nomEquipement]=temp
+
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinSensorFumeeAtelier"
+    temp.valeur=0 
+    equipementsAlarmes[temp.nomEquipement]=temp
+
+    temp = EQUIPEMENT()
+    temp.heureLecture = datetime.now()
+    temp.nomEquipement = "pinSensorPluie"
+    temp.valeur=0 
+    equipementsAlarmes[temp.nomEquipement]=temp
+
+    return equipementsAlarmes
+
+
+def getValeursAlarme(**equipementsAlarmes):
+    equipementsAlarmes["pinChambrePrincipale"]=pinChambrePrincipale.value
+    equipementsAlarmes["pinBureau"].valeur=pinBureau.value
+    equipementsAlarmes["pinSalon"].valeur=pinSalon.value
+    equipementsAlarmes["pinSousSol"].valeur=pinSousSol.value
+    equipementsAlarmes["pinSalleVernis"].valeur=pinSalleVernis.value
+    equipementsAlarmes["pinPorteAvant"].valeur=pinPorteAvant.value
+    equipementsAlarmes["pinPorteArriere"].valeur=pinPorteArriere.value
+    equipementsAlarmes["pinPorteSousSol"].valeur=pinPorteSousSol.value
+    equipementsAlarmes["pinSensorFumeeSalleBillard"].valeur=pinSensorFumeeSalleBillard.value
+    equipementsAlarmes["pinEauAtelier"].valeur=pinEauAtelier.value
+    equipementsAlarmes["pinSensorFumeeAtelier"].valeur=pinSensorFumeeAtelier.value
+    equipementsAlarmes["pinSensorPluie"].valeur=pinSensorPluie.value
+
+    return equipementsAlarmes
+
+def getValeursGicleurs(**equipementsGicleurs):
+
+    equipementsGicleurs["pinGicleur1"].valeur=gicleur1.value
+    equipementsGicleurs["pinGicleur2"].valeur=gicleur2.value
+    equipementsGicleurs["pinGicleur3"].valeur=gicleur3.value
+    equipementsGicleurs["pinGicleur4"].valeur=gicleur4.value
+
+    return equipementsGicleurs
