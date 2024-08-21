@@ -10,6 +10,7 @@ import time
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from time import sleep
+import RedisInOut as redisInOut
 
 import rpiMethodes
 
@@ -131,19 +132,76 @@ def initialiseAlarmes(equipementsAlarmes):
 
     return equipementsAlarmes
 
+
+def executeRequete(requete):
+    print ("requete arrosage 1 ", requete)
+    if requete == "Gicleur_1_ON":
+        print ("--------------------- ON")
+        rpiMethodes.set_relais("relais1", True)
+        redisInOut.setRequeteArrosageNil()
+
+    if requete == "Gicleur_1_OFF":
+        print ("-------------------- OFF")
+        rpiMethodes.set_relais("relais1", False)    
+        redisInOut.setRequeteArrosageNil()
+
+    print ("requete arrosage 1 ", requete)
+    if requete == "Gicleur_2_ON":
+        print ("--------------------- ON")
+        rpiMethodes.set_relais("relais2", True)
+        redisInOut.setRequeteArrosageNil()
+
+    if requete == "Gicleur_2_OFF":
+        print ("-------------------- OFF")
+        rpiMethodes.set_relais("relais2", False)    
+        redisInOut.setRequeteArrosageNil()
+
+    print ("requete arrosage 3 ", requete)
+    if requete == "Gicleur_3_ON":
+        print ("--------------------- ON")
+        rpiMethodes.set_relais("relais3", True)
+        redisInOut.setRequeteArrosageNil()
+
+    if requete == "Gicleur_3_OFF":
+        print ("-------------------- OFF")
+        rpiMethodes.set_relais("relais3", False)    
+        redisInOut.setRequeteArrosageNil()
+
+    print ("requete arrosage 1 ", requete)
+    if requete == "Gicleur_4_ON":
+        print ("--------------------- ON")
+        rpiMethodes.set_relais("relais4", True)
+        redisInOut.setRequeteArrosageNil()
+
+    if requete == "Gicleur_4_OFF":
+        print ("-------------------- OFF")
+        rpiMethodes.set_relais("relais4", False)    
+        redisInOut.setRequeteArrosageNil()
+
+
+
+
+redisInOut.StartSystemeArrosageRequete()
+
+
 if __name__ == '__main__':
 
     # Now loop blinking the pin 0 output and reading the state of pin 1 input.
-    sleep(10)
+    sleep(2)
 
     equipementsAlarmes = initialiseAlarmes(equipementsAlarmes)
     equipementsGicleurs = initialiseGicleurs(equipementsGicleurs)
+    
+    redisInOut.publishInterfaceAlarmeDetecteur(equipementsAlarmes)
+    redisInOut.publishInterfaceDetecteurArrosage(equipementsGicleurs)
 
     while True:
         # Blink pin 0 on and then off.
         # pin0.value = True
-        time.sleep(1)
-        print ("passe 1")
+        requete=redisInOut.getRequeteArrosage()
+        redisInOut.setRequeteArrosageNil()
+        time.sleep(.3)
+        print ("Requete : ", requete)
         equipementsAlarmes=rpiMethodes.getValeursAlarme(equipementsAlarmes)
         print(equipementsAlarmes)
         print ("passe 2")

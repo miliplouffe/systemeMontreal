@@ -12,7 +12,7 @@ import threading
 from datetime import datetime, timedelta
 import sys, os
 from enum import Enum
-redisIpAdresse="192.168.1.143"
+redisIpAdresse="192.168.1.210"
 redisInOut.InitialiseRedisClient(redisIpAdresse)
 
 import struct
@@ -181,37 +181,20 @@ def decodeDataDetecteur(detecteur, **Equipement):
 
     recEquipement=EQUIPEMENT()
 
-    recEquipement = Equipement["Prop"]
-    recEquipement.Valeur = detecteur.Prop
-    recEquipement.DateHeureCourante = datetime.now()
-    Equipement["Prop"]=recEquipement
-    recEquipement = Equipement["Co"]
-    recEquipement.Valeur = detecteur.Co
-    recEquipement.DateHeureCourante = datetime.now()
-    Equipement["Co"]=recEquipement
-    recEquipement = Equipement["Fumee"]
-    recEquipement.Valeur = detecteur.Fumee
-    recEquipement.DateHeureCourante = datetime.now()
-    Equipement["Fumee"]=recEquipement
-    recEquipement = Equipement["Mouvement"]
-    recEquipement.Valeur = detecteur.Mouvement
-    recEquipement.DateHeureCourante = datetime.now()
-    Equipement["Mouvement"]=recEquipement
-    recEquipement = Equipement["EauElectrique"]
-    recEquipement.Valeur = detecteur.EauElectrique
-    recEquipement.DateHeureCourante = datetime.now()
-    Equipement["EauElectrique"]=recEquipement
-    recEquipement = Equipement["EauTraitement"]
-    recEquipement.Valeur = detecteur.EauTraitement
-    recEquipement.DateHeureCourante = datetime.now()
-    Equipement["EauTraitement"]=recEquipement
-    recEquipement = Equipement.PanneElectrique
-    if detecteur["PanneElectrique"] > 995:
-        recEquipement.Valeur = 0
-    else:
-        recEquipement.Valeur = 1
-    recEquipement.DateHeureCourante = datetime.now()
-    Equipement["PanneElectrique"]=recEquipement
+    Equipement.MouvChambrePrincipale=detecteur["MouvChambrePrincipale"]
+    Equipement.MouvChambreSecondaire=detecteur["MouvChambreSecondaire"]
+    Equipement.MouvBureau=detecteur["MouvBureau"]
+    Equipement.MouvSalon=detecteur["MouvSalon"]
+    Equipement.MouvSalleBillard=detecteur["MouvSalleBillard"]
+    Equipement.MouvSalleVernis=detecteur["MouvSalleVernis"]
+    Equipement.InterPorteAvant=detecteur["InterPorteAvant"]
+    Equipement.InterPorteArriere=detecteur["InterPorteArriere"]
+    Equipement.InterPorteSousSol=detecteur["InterPorteSousSol"]
+    Equipement.DectEauAtelier=detecteur["DectEauAtelier"]
+    Equipement.DectEauSalleLavage=detecteur["DectEauSalleLavage"]
+    Equipement.DectEauPluie=detecteur["DectEauPluie"]
+    Equipement.DectFumeeSalleBillard=detecteur["DectFumeeSalleBillard"]
+    Equipement.DectFumeeAtelier=detecteur["DectFumeeAtelier"]
 
 
     return Equipement

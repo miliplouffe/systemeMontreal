@@ -132,24 +132,67 @@ gicleur3.off()
 gicleur4 = LED(const.pinGicleur4)
 gicleur4.off()
 
+def set_relais(nomRelais, statut):
+    global relais1, relais2, relais3, relais4
+
+    if statut==True:
+        print ("statut True")
+        if nomRelais =="relais1":
+            print ("relais on")
+            gicleur1.on()
+        if nomRelais =="relais2":
+            gicleur2.on()        
+        if nomRelais =="relais3":
+            gicleur3.on()
+        if nomRelais =="relais4":
+            gicleur4.on()            
+    else:
+        if nomRelais =="relais1":
+            print ("relais off")
+            gicleur1.off()
+        if nomRelais =="relais2":
+            gicleur2.off()
+        if nomRelais =="relais3":
+            gicleur3.off()
+        if nomRelais =="relais4":
+            gicleur4.off()
+
+
 
 def getValeursAlarme(equipementsAlarmes):
-    equipementsAlarmes["pinChambrePrincipale"]= pinChambrePrincipale.value
-    equipementsAlarmes["pinBureau"]= pinBureau.value
-    equipementsAlarmes["pinSalon"]= pinSalon.value
-    equipementsAlarmes["pinSousSol"]= pinSousSol.value
-    equipementsAlarmes["pinSalleVernis"]= pinSalleVernis.value
-    equipementsAlarmes["pinPorteAvant"]= pinPorteAvant.value
-    equipementsAlarmes["pinPorteArriere"]= pinPorteArriere.value
-    equipementsAlarmes["pinPorteSousSol"]= pinPorteSousSol.value
-    equipementsAlarmes["pinSensorFumeeSalleBillard"]= pinSensorFumeeSalleBillard.value
-    equipementsAlarmes["pinEauAtelier"]= pinEauAtelier.value
-    equipementsAlarmes["pinSensorPluie"]= pinSensorPluie.value
+    equipementsAlarmes.pinChambrePrincipale= pinChambrePrincipale.value
+    equipementsAlarmes.pinBureau= pinBureau.value
+    equipementsAlarmes.pinSalon= pinSalon.value
+    equipementsAlarmes.pinSousSol= pinSousSol.value
+    equipementsAlarmes.pinSalleVernis= pinSalleVernis.value
+    equipementsAlarmes.pinPorteAvant= pinPorteAvant.value
+    equipementsAlarmes.pinPorteArriere= pinPorteArriere.value
+    equipementsAlarmes.pinPorteSousSol= pinPorteSousSol.value
+    equipementsAlarmes.pinSensorFumeeSalleBillard= pinSensorFumeeSalleBillard.value
+    equipementsAlarmes.pinEauAtelier= pinEauAtelier.value
+    equipementsAlarmes.pinSensorPluie= pinSensorPluie.value
+
+    # equipementsAlarmes["pinChambrePrincipale"]= pinChambrePrincipale.value
+    # equipementsAlarmes["pinBureau"]= pinBureau.value
+    # equipementsAlarmes["pinSalon"]= pinSalon.value
+    # equipementsAlarmes["pinSousSol"]= pinSousSol.value
+    # equipementsAlarmes["pinSalleVernis"]= pinSalleVernis.value
+    # equipementsAlarmes["pinPorteAvant"]= pinPorteAvant.value
+    # equipementsAlarmes["pinPorteArriere"]= pinPorteArriere.value
+    # equipementsAlarmes["pinPorteSousSol"]= pinPorteSousSol.value
+    # equipementsAlarmes["pinSensorFumeeSalleBillard"]= pinSensorFumeeSalleBillard.value
+    # equipementsAlarmes["pinEauAtelier"]= pinEauAtelier.value
+    # equipementsAlarmes["pinSensorPluie"]= pinSensorPluie.value
    
     return equipementsAlarmes
 
 def getValeursGicleurs(equipementsGicleurs):
 
+    # equipementsGicleurs.pinGicleur1.valeur=gicleur1.value
+    # equipementsGicleurs.pinGicleur2.valeur=gicleur2.value
+    # equipementsGicleurs.pinGicleur3.valeur=gicleur3.value
+    # equipementsGicleurs.pinGicleur4.valeur=gicleur4.value
+# 
     equipementsGicleurs["pinGicleur1"].valeur=gicleur1.value
     equipementsGicleurs["pinGicleur2"].valeur=gicleur2.value
     equipementsGicleurs["pinGicleur3"].valeur=gicleur3.value

@@ -4,48 +4,39 @@ import RedisInOut as redisInOut
 from dataclasses import dataclass
 
 
-redisIpAdresse="192.168.1.143"
+redisIpAdresse="192.168.1.210"
 redisInOut.InitialiseRedisClient(redisIpAdresse)
 
 class const:
     format = "02-01-2006 15:04:05"
 
-detecteurGicleur = dict()
-requete=""
-
-class DETECTEUR:
-    MouvChambrePrincipale: int
-    MouvChambreSecondaire: int
-    MouvBureau: int
-    MouvSalon: int
-    MouvSalleBillard: int
-    MouvSalleVernis: int
-    InterPorteAvant: int
-    InterPorteArriere: int
-    InterPorteSousSol: int
-    DectEauAtelier: int
-    DectEauSalleLavage: int
-    DectEauPluie: int
-    DectFumeeSalleBillard: int
-    DectFumeeAtelier: int
 
 
 @dataclass
 class DETECTEUR:
-    Prop: float = 0.0
-    Co: float = 0.0
-    Fumee: float = 0.0
-    Mouvement: float = 0.0
-    EauElectrique: float = 0.0
-    EauTraitement: float = 0.0
-    PanneElectrique: float = 0.0
+    MouvChambrePrincipale: int=0
+    MouvChambreSecondaire: int=0
+    MouvBureau: int=0
+    MouvSalon: int=0
+    MouvSalleBillard: int=0
+    MouvSalleVernis: int=0
+    InterPorteAvant: int=0
+    InterPorteArriere: int=0
+    InterPorteSousSol: int=0
+    DectEauAtelier: int=0
+    DectEauSalleLavage: int=0
+    DectEauPluie: int=0
+    DectFumeeSalleBillard: int=0
+    DectFumeeAtelier: int=0
+
 
 @dataclass
 class GICLEURS_STATUT:  
     NoZone: int = 0
     Statut: bool = False
 
-
+detecteurGicleur = dict()
+requete=""
 def initialiseGicleursStatut(**gicleursStatut):
     gicleurRec = GICLEURS_STATUT()
     gicleurRec.NoZone = 1
@@ -120,16 +111,19 @@ if __name__ == '__main__':
     gicleursStatut = dict()
     gicleursStatut = initialiseGicleursStatut()
 
+
     detecteurAlarme=DETECTEUR()
 
     while True:
         try:
 
             # pour alarmes
-            detecteurAlarme=rpiMethodes.getAlarmeDetecteur(detecteurAlarme)
+            print ("passe 3 ")
+            detecteurAlarme=rpiMethodes.getValeursAlarme(detecteurAlarme)
+            print ("passe 4 ")
             redisInOut.publishInterfaceAlarmeDetecteur(detecteurAlarme)
             # pour systeme arrosage va lire si le systeme arrose
-            gicleursStatut=rpiMethodes.getArrosageDetecteur(gicleursStatut)
+            gicleursStatut=rpiMethodes.getValeursGicleurs(gicleursStatut)
 
             requete=redisInOut.getRequeteArrosage()
             redisInOut.setRequeteArrosageNil()
