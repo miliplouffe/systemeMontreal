@@ -76,29 +76,6 @@ NoZone=0
 Statut=0
 Action=0
 
-@dataclass
-class DETECTEUR:
-    Prop: float = 0.0
-    Co: float = 0.0
-    Fumee: float = 0.0
-    Mouvement: float = 0.0
-    EauElectrique: float = 0.0
-    EauTraitement: float = 0.0
-    PanneElectrique: float = 0.0
-
-def detecteurDataStructure(dectArduino):
-    global detecteurs
-    # detecteurs = DETECTEUR()
-
-    detecteurs.Prop=dectArduino["Prop"]
-    detecteurs.Co=dectArduino["Co"]
-    detecteurs.Fumee=dectArduino["Fumee"]
-    detecteurs.Mouvement=dectArduino["Mouvement"]
-    detecteurs.EauElectrique=dectArduino["EauElectrique"]
-    detecteurs.EauTraitement=dectArduino["EauTraitement"]
-    detecteurs.PanneElectrique=dectArduino["PanneElectrique"]
-
-    return detecteurs
 
 @dataclass
 class Test:
@@ -121,68 +98,82 @@ def defineEquipementsVariables(nom , Actif, Armer, messageErreur):
     return stockRec
 
 
-
 def initialiseVariables(**Equipement):
 
     NomEquipement = ""
 
-    NomEquipement = "Prop"
-    Armer = True
-    Actif = True
-    Equipement[NomEquipement] = defineEquipementsVariables(NomEquipement, Actif, Armer, "Le systeme detecte une fuite de propane")
-    NomEquipement = "Co"
-    Armer = True
-    Actif = True
-    Equipement[NomEquipement] = defineEquipementsVariables(NomEquipement, Actif, Armer, "Le systeme detecte une fuite de CO")
-    NomEquipement = "Fumee"
-    Armer = True
-    Actif = True
-    Equipement[NomEquipement] = defineEquipementsVariables(NomEquipement, Actif, Armer, "Le systeme de la fumee")
-    NomEquipement = "Mouvement"
+    NomEquipement = "PorteEntree"
     Armer = False
     Actif = True
-    Equipement[NomEquipement] = defineEquipementsVariables(NomEquipement, Actif, Armer, "Le systeme detecte du mouvement dans le sous-sol")
-    NomEquipement = "EauElectrique"
-    Armer = True
+    Equipement[NomEquipement] = defineEquipementsVariables(NomEquipement, Actif, Armer, "Le systeme d'alarme a detecte une porte ouverte a l'entree")
+    NomEquipement = "PorteArriere"
+    Armer = False
     Actif = True
-    Equipement[NomEquipement] = defineEquipementsVariables(NomEquipement, Actif, Armer, "Le systeme detecte de l eau dans la salle electrique")
-    NomEquipement = "EauTraitement"
-    Armer = True
+    Equipement[NomEquipement] = defineEquipementsVariables(NomEquipement, Actif, Armer, "Le systeme d'alarme a detecte une porte ouverte a l'arriere")
+    NomEquipement = "PorteSousSol"
+    Armer = False
     Actif = True
-    Equipement[NomEquipement] = defineEquipementsVariables(NomEquipement, Actif, Armer, "Le systeme detecte de l eau dans la salle de traitement de l eau")
-    NomEquipement = "PanneElectrique"
-    Armer = True
+    Equipement[NomEquipement] = defineEquipementsVariables(NomEquipement, Actif, Armer, "Le systeme d'alarme a detecte une porte ouverte a la porte du sous-sol")
+    NomEquipement = "ChambrePrincipale"
+    Armer = False
     Actif = True
-    Equipement[NomEquipement] = defineEquipementsVariables(NomEquipement, Actif, Armer, "Le systeme detecte une panne electrique exterieure")
+    Equipement[NomEquipement] = defineEquipementsVariables(NomEquipement, Actif, Armer, "Le systeme d'alarme a detecte un mouvement dans la chambre principale")
+    NomEquipement = "ChambreSecondaire"
+    Armer = False
+    Actif = True
+    Equipement[NomEquipement] = defineEquipementsVariables(NomEquipement, Actif, Armer, "Le systeme d'alarme a detecte un mouvement dans la chambre secondaire")
+    NomEquipement = "ChambreSousSol"
+    Armer = False
+    Actif = True
+    Equipement[NomEquipement] = defineEquipementsVariables(NomEquipement, Actif, Armer, "Le systeme d'alarme a detecte un mouvement dans la chambre su sous-sol")
+    NomEquipement = "SalleBillard"
+    Armer = False
+    Actif = False
+    Equipement[NomEquipement] = defineEquipementsVariables(NomEquipement, Actif, Armer, "Le systeme d'alarme a detecte du mouvement a la salle de billard")
+    NomEquipement = "Salon"
+    Armer = False
+    Actif = True
+    Equipement[NomEquipement] = defineEquipementsVariables(NomEquipement, Actif, Armer, "Le systeme d'alarme a detecte du mouvement dans le salon")
+    NomEquipement = "Bureau"
+    Armer = False
+    Actif = True
+    Equipement[NomEquipement] = defineEquipementsVariables(NomEquipement, Actif, Armer, "Le systeme d'alarme a detecte un mouvement dans le bureau")
+    NomEquipement = "ChauffeEau"
+    Armer = False
+    Actif = False
+    Equipement[NomEquipement] = defineEquipementsVariables(NomEquipement, Actif, Armer, "Le systeme d'alarme a detecte de l'eau au chauffe eau")
+    zoneList.append(NomEquipement)   
+    NomEquipement = "AtelierEau"
+    Armer = False
+    Actif = False
+    Equipement[NomEquipement] = defineEquipementsVariables(NomEquipement, Actif, Armer, "Le systeme d'alarme a detecte de l'eau dans l'atelier")
+    zoneList.append(NomEquipement)
+    NomEquipement = "FumeeAtelier"
+    Armer = False
+    Actif = False
+    Equipement[NomEquipement] = defineEquipementsVariables(NomEquipement, Actif, Armer, "Le systeme d'alarme a detecte de la fumee dans le sous-sol")
+    zoneList.append(NomEquipement)
+    NomEquipement = "FumeeSalleBillard"
+    Armer = False
+    Actif = False
+    Equipement[NomEquipement] = defineEquipementsVariables(NomEquipement, Actif, Armer, "Le systeme d'alarme a detecte de la fumee dans l'atelier'")
+
     NomEquipement = "EauPluie"
     Armer = False
     Actif = False
-    Equipement[NomEquipement] = defineEquipementsVariables(NomEquipement, Actif, Armer, "Le systeme detecte la pluie")
-     
+    Equipement[NomEquipement] = defineEquipementsVariables(NomEquipement, Actif, Armer, "Detection de la pluie exterieure")
+    zoneList.append(NomEquipement)
+
+
     return Equipement
 
-# def decodeDataDetecteur(detecteur, **Equipement):
-# 
-#     recEquipement=EQUIPEMENT()
-# 
-#     recEquipement = Equipement["Prop"]
-#     recEquipement.Valeur = detecteur.Prop
-#     recEquipement.DateHeureCourante = datetime.now()
-#  
-#     recEquipement = Equipement["Co"]
-#     recEquipement.Valeur = detecteur.Co
-#     recEquipement.DateHeureCourante = datetime.now()
-#  
-#     recEquipement = Equipement["Fumee"]
-#     recEquipement.Valeur = detecteur.Fumee
-#     recEquipement.DateHeureCourante = datetime.now()
-#  
+
 def decodeDataDetecteur(detecteur, **Equipement):
 
     recEquipement=EQUIPEMENT()
 
-    Equipement.MouvChambrePrincipale=detecteur["MouvChambrePrincipale"]
-    Equipement.MouvChambreSecondaire=detecteur["MouvChambreSecondaire"]
+    Equipement["MouvChambrePrincipale"].Valeur=detecteur["MouvChambrePrincipale"]
+    Equipement["MouvChambreSecondaire"].Valeur=detecteur["MouvChambreSecondaire"]
     Equipement.MouvBureau=detecteur["MouvBureau"]
     Equipement.MouvSalon=detecteur["MouvSalon"]
     Equipement.MouvSalleBillard=detecteur["MouvSalleBillard"]
@@ -429,15 +420,11 @@ def sendSystemeAlarmeEquipement():
 
 # CourrielValeur=recupereCourrielStatut()
 
-zoneList.append("Prop")
-zoneList.append("Co")
-zoneList.append("Fumee")
-zoneList.append("EauElectrique")
-zoneList.append("EauTraitement")
-zoneList.append("PanneElectrique")
-Equipement=EQUIPEMENT()
-
 if __name__ == '__main__':
+
+    Equipement = dict()
+    Equipement = initialiseVariables(**Equipement)
+    redisInOut.sauvegardeSystemeAlarme(**Equipement)
 
     t1 = threading.Thread(target=sendSystemeAlarmeEquipement)
     t1.start()
@@ -452,9 +439,8 @@ if __name__ == '__main__':
     dateHeureValideCircuit=datetime.now()
     dateHeureAlarme=datetime.now()
     sendMail("Systeme alarme Wentworth-Nord","Le systeme d alarme a redemarre")
-    Detecteur = DETECTEUR()
-    Equipement = dict()
-    Equipement = initialiseVariables(**Equipement)
+
+   
     alarmeErreur = False
     systemeArmer = False
     heureCourrielEnvoye=datetime.now()
@@ -462,15 +448,12 @@ if __name__ == '__main__':
     DateHeureCourante=datetime.now()
     systemeAlarme=False
     activeCompletTest="non"
-    detecteursRec=DETECTEUR()
-    # marshal = Marshal()
     mustSendToClient=False
     systemeAlarmeSatut=""
 
     readAllData=True  
     redisInOut.StartSystemeAlarmeRequete()
     redisInOut.StartAlarmeDetecteurs()
-    redisInOut.sauvegardeSystemeAlarme(**Equipement)
 
     fumeePin                       = 16
     mouvementPin                   = 23
@@ -501,6 +484,8 @@ if __name__ == '__main__':
 
         else:
             sleep(.1)
+
+
 
         readAllData=True 
  
