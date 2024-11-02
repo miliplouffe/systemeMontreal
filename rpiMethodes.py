@@ -186,16 +186,12 @@ def getValeursAlarme(equipementsAlarmes):
    
     return equipementsAlarmes
 
-def getValeursGicleurs(equipementsGicleurs):
-
-    # equipementsGicleurs.pinGicleur1.valeur=gicleur1.value
-    # equipementsGicleurs.pinGicleur2.valeur=gicleur2.value
-    # equipementsGicleurs.pinGicleur3.valeur=gicleur3.value
-    # equipementsGicleurs.pinGicleur4.valeur=gicleur4.value
-# 
-    equipementsGicleurs["pinGicleur1"].valeur=gicleur1.value
-    equipementsGicleurs["pinGicleur2"].valeur=gicleur2.value
-    equipementsGicleurs["pinGicleur3"].valeur=gicleur3.value
-    equipementsGicleurs["pinGicleur4"].valeur=gicleur4.value
+def getValeursGicleurs():
+    equipementsGicleurs=list()
+    
+    equipementsGicleurs.append=gicleur1.value
+    equipementsGicleurs.append=gicleur2.value
+    equipementsGicleurs.append=gicleur3.value
+    equipementsGicleurs.append=gicleur4.value
 
     return equipementsGicleurs
