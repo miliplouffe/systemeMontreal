@@ -172,17 +172,6 @@ def getValeursAlarme(equipementsAlarmes):
     equipementsAlarmes.pinEauAtelier= pinEauAtelier.value
     equipementsAlarmes.pinSensorPluie= pinSensorPluie.value
 
-    # equipementsAlarmes["pinChambrePrincipale"]= pinChambrePrincipale.value
-    # equipementsAlarmes["pinBureau"]= pinBureau.value
-    # equipementsAlarmes["pinSalon"]= pinSalon.value
-    # equipementsAlarmes["pinSousSol"]= pinSousSol.value
-    # equipementsAlarmes["pinSalleVernis"]= pinSalleVernis.value
-    # equipementsAlarmes["pinPorteAvant"]= pinPorteAvant.value
-    # equipementsAlarmes["pinPorteArriere"]= pinPorteArriere.value
-    # equipementsAlarmes["pinPorteSousSol"]= pinPorteSousSol.value
-    # equipementsAlarmes["pinSensorFumeeSalleBillard"]= pinSensorFumeeSalleBillard.value
-    # equipementsAlarmes["pinEauAtelier"]= pinEauAtelier.value
-    # equipementsAlarmes["pinSensorPluie"]= pinSensorPluie.value
    
     return equipementsAlarmes
 

@@ -466,7 +466,7 @@ if __name__ == '__main__':
         Requete=redisInOut.getRequeteAlarme()
 
         try:
-            Detecteur = rpiMethodes.getAlarmeDetecteur()
+            Detecteur = rpiMethodes.getValeursAlarme()
             Equipement = decodeDataDetecteur(Detecteur, **Equipement)
             Equipement = changeValeursPinsArmer(Equipement)
             redisInOut.publishSystemeAlarmeEquipement(Equipement)
