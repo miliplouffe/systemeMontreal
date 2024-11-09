@@ -353,7 +353,6 @@ def publishSystemeStatutGicleurs(statutGicleurs):
         redisClient = redis.StrictRedis(host=redisIpAdresseGlobal, port=6379, charset="utf-8", decode_responses=True)
 
 def subscribeSystemeArrosageStatut():
-    global 
     global redisClient,redisIpAdresseGlobal
     while True:
         if is_redis_available():

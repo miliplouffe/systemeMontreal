@@ -121,41 +121,36 @@ pinSensorPluie.pull = digitalio.Pull.UP
 
 
 gicleur1 = LED(const.pinGicleur1)
-gicleur1.off()
-
 gicleur2 = LED(const.pinGicleur2)
-gicleur2.off()
-
 gicleur3 = LED(const.pinGicleur3)
-gicleur3.off()
-
 gicleur4 = LED(const.pinGicleur4)
-gicleur4.off()
+
+
+def initialiseRelaisGicleur():
+    gicleur1.off()
+    gicleur2.off()
+    gicleur3.off()
+    gicleur4.off()
 
 def set_relais(nomRelais, statut):
     global relais1, relais2, relais3, relais4
 
     if statut==True:
         print ("statut True")
-        if nomRelais =="relais1":
+        if nomRelais =="1":
             print ("relais on")
             gicleur1.on()
-        if nomRelais =="relais2":
+        if nomRelais =="2":
             gicleur2.on()        
-        if nomRelais =="relais3":
+        if nomRelais =="3":
             gicleur3.on()
-        if nomRelais =="relais4":
+        if nomRelais =="4":
             gicleur4.on()            
     else:
-        if nomRelais =="relais1":
-            print ("relais off")
-            gicleur1.off()
-        if nomRelais =="relais2":
-            gicleur2.off()
-        if nomRelais =="relais3":
-            gicleur3.off()
-        if nomRelais =="relais4":
-            gicleur4.off()
+        gicleur1.off()
+        gicleur2.off()
+        gicleur3.off()
+        gicleur4.off()
 
 
 
