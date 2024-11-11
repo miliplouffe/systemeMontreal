@@ -171,11 +171,10 @@ def getValeursAlarme(equipementsAlarmes):
     return equipementsAlarmes
 
 def getValeursGicleurs():
-    equipementsGicleurs=list()
+    equipementsGicleurs=[]
+    equipementsGicleurs.append(gicleur1.value)
+    equipementsGicleurs.append(gicleur2.value)
+    equipementsGicleurs.append(gicleur3.value)
+    equipementsGicleurs.append(gicleur4.value)
     
-    equipementsGicleurs.append=gicleur1.value
-    equipementsGicleurs.append=gicleur2.value
-    equipementsGicleurs.append=gicleur3.value
-    equipementsGicleurs.append=gicleur4.value
-
     return equipementsGicleurs
