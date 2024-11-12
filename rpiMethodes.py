@@ -126,11 +126,17 @@ gicleur3 = LED(const.pinGicleur3)
 gicleur4 = LED(const.pinGicleur4)
 
 
-def initialiseRelaisGicleur():
-    gicleur1.off()
-    gicleur2.off()
-    gicleur3.off()
-    gicleur4.off()
+def initialiseRelaisGicleur(gicleurs):
+    global gicleur1, gicleur2, gicleur3,gicleur4
+    if gicleurs["1"].ZoneActive==True:
+        gicleur1.on()
+    if gicleurs["2"].ZoneActive==True:
+        gicleur2.on()
+    if gicleurs["3"].ZoneActive==True:
+        gicleur3.on()
+    if gicleurs["4"].ZoneActive==True:
+        gicleur4.on()
+
 
 def set_relais(nomRelais, statut):
     global relais1, relais2, relais3, relais4
@@ -138,19 +144,18 @@ def set_relais(nomRelais, statut):
     if statut==True:
         print ("statut True")
         if nomRelais =="1":
-            print ("relais on")
-            gicleur1.on()
+            gicleur1.off()
         if nomRelais =="2":
-            gicleur2.on()        
+            gicleur2.off()        
         if nomRelais =="3":
-            gicleur3.on()
+            gicleur3.off()
         if nomRelais =="4":
-            gicleur4.on()            
+            gicleur4.off()            
     else:
-        gicleur1.off()
-        gicleur2.off()
-        gicleur3.off()
-        gicleur4.off()
+        gicleur1.on()
+        gicleur2.on()
+        gicleur3.on()
+        gicleur4.on()
 
 
 
@@ -170,11 +175,23 @@ def getValeursAlarme(equipementsAlarmes):
    
     return equipementsAlarmes
 
-def getValeursGicleurs():
+def getValeursGicleurs(gicleurs):
     equipementsGicleurs=[]
-    equipementsGicleurs.append(gicleur1.value)
-    equipementsGicleurs.append(gicleur2.value)
-    equipementsGicleurs.append(gicleur3.value)
-    equipementsGicleurs.append(gicleur4.value)
-    
+    if gicleurs["1"].ZoneActive==True:
+        equipementsGicleurs.append(gicleur1.value)
+    else:
+         equipementsGicleurs.append(-1)
+    if gicleurs["2"].ZoneActive==True:
+        equipementsGicleurs.append(gicleur1.value)
+    else:
+         equipementsGicleurs.append(-1)        
+    if gicleurs["3"].ZoneActive==True:
+        equipementsGicleurs.append(gicleur1.value)
+    else:
+         equipementsGicleurs.append(-1)
+    if gicleurs["4"].ZoneActive==True:
+        equipementsGicleurs.append(gicleur1.value)
+    else:
+         equipementsGicleurs.append(-1)
+
     return equipementsGicleurs

@@ -215,23 +215,14 @@ def arrosageValide():
 
 
 
-def FermerGicleurs():
-        print("passe 20")
-        redisInOut.publishInterfaceRequete("Gicleur_1_OFF")
-        redisInOut.publishInterfaceRequete("Gicleur_2_OFF")     
-        redisInOut.publishInterfaceRequete("Gicleur_3_OFF")     
-        redisInOut.publishInterfaceRequete("Gicleur_4_OFF")     
-        print ("passe 22")
-        sleep (.5)
-
 def initialiseConfigurationGenerale():
     global GicleurAssocie
     confGeneral=CONFIGURATION_GENERALE()
 
-    confGeneral.ArrosageJourPairImpair="Impair"
+    confGeneral.ArrosageJourPairImpair="Pair"
     confGeneral.SystemArrosageActif=True
     confGeneral.SondePluieActive=False
-    confGeneral.HeureDebutArrosage=7
+    confGeneral.HeureDebutArrosage=10
     confGeneral.NombreJourInterval
 
     return confGeneral
@@ -295,28 +286,31 @@ def decodeDataDetecteur(gicleurValeurList, **gicleursStatut):
     recGicleur=GICLEURS_STATUT()
     recGicleur = gicleursStatut["1"]
     recGicleur.Statut = gicleurValeurList[0]
+
     recGicleur.DateHeureCourante = datetime.now()
     gicleursStatut["1"]=recGicleur
 
+    recGicleur=GICLEURS_STATUT()
     recGicleur = gicleursStatut["2"]
     recGicleur.Statut = gicleurValeurList[1]
     recGicleur.DateHeureCourante = datetime.now()
     gicleursStatut["2"]=recGicleur
 
+    recGicleur=GICLEURS_STATUT()
     recGicleur = gicleursStatut["3"]
     recGicleur.Statut = gicleurValeurList[2]
     recGicleur.DateHeureCourante = datetime.now()
     gicleursStatut["3"]=recGicleur
 
+    recGicleur=GICLEURS_STATUT()
     recGicleur = gicleursStatut["4"]
     recGicleur.Statut = gicleurValeurList[3]
     recGicleur.DateHeureCourante = datetime.now()
-    gicleursStatut["4"]=recGicleur
     if recGicleur.Statut==0:
         recGicleur.Statut=1
     else:
         recGicleur.Statut=0
-
+    gicleursStatut["4"]=recGicleur
     return gicleursStatut
 
 
@@ -329,6 +323,16 @@ def sendSystemeArrosageGicleursStatuts():
         redisInOut.publishSystemeStatutGicleurs(gicleursStatut)
         sleep(1)
 
+def fermerGicleurs(gicleurs):
+    if gicleurs["1"].ZoneActive==True:
+        rpiMethodes.set_relais(1, False)   # arrête les gicleurs
+    if gicleurs["2"].ZoneActive==True:
+        rpiMethodes.set_relais(2, False)   # arrête les gicleurs
+    if gicleurs["3"].ZoneActive==True:
+        rpiMethodes.set_relais(3, False)   # arrête les gicleurs
+    if gicleurs["4"].ZoneActive==True:
+        rpiMethodes.set_relais(4, False)   # arrête les gicleurs
+    
 def executeRequete(Requete):
     global gicleurs
     
@@ -448,20 +452,22 @@ gicleursStatut=dict()
 gicleursStatut=initialiseGicleursStatut()
 
 confGeneral=initialiseConfigurationGenerale()
-redisInOut.sauvegardeSystemeArrosageConfigurationGenerale(confGeneral)
-gicleurs = initialiaseGicleurs()
-redisInOut.sauvegardeArrosageConfigurationGicleurs(gicleurs)
+# redisInOut.sauvegardeSystemeArrosageConfigurationGenerale(confGeneral)
+# redisInOut.sauvegardeArrosageConfigurationGicleurs(gicleurs)
+
+confGeneral = redisInOut.recupereSystemeArrosageConfigurationGenerale()
+gicleurs=redisInOut.recupereArrosageConfigurationGicleurs()
+fermerGicleurs(gicleurs)
 
 redisInOut.StartSystemeArrosageRequete()
 redisInOut.startSystemeStatutGicleur()
-rpiMethodes.initialiseRelaisGicleur()
+rpiMethodes.initialiseRelaisGicleur(gicleurs)
+
 
 
 if __name__ == '__main__':
     global valeurPluie
 
-    # confGeneral = redisInOut.recupereSystemeArrosageConfigurationGenerale()
-    # gicleurs=redisInOut.recupereArrosageConfigurationGicleurs()
     DateHeureCourante=datetime.now()
     DateHeureDebutIntervalle=datetime.now() + timedelta(days=-10)
 
@@ -470,12 +476,11 @@ if __name__ == '__main__':
     t1 = threading.Thread(target=sendSystemeArrosageGicleursStatuts)
     t1.start()
 
-    FermerGicleurs()
     
     while True :  
         try:
             redisInOut.RunRedisInOut("StartSystemeArrosageRequete")    # check if task is running        
-            gicleurValeurList = rpiMethodes.getValeursGicleurs() 
+            gicleurValeurList = rpiMethodes.getValeursGicleurs(gicleurs) 
             gicleursStatut=decodeDataDetecteur(gicleurValeurList, **gicleursStatut)
             # gicleurStatut est sauvegardé dans redis par le thread sendSystemeArrosageGicleursStatuts
             Requete = redisInOut.getRequeteArrosage()
