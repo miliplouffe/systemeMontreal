@@ -458,13 +458,13 @@ confGeneral=initialiseConfigurationGenerale()
 redisInOut.sauvegardeSystemeArrosageConfigurationGenerale(confGeneral)
 
 gicleurs=dict()
-gicleurs=initialiaseGicleurs()
-rpiMethodes.initialiseRelaisGicleur(gicleurs)  # initialise gicleur sur le raspberry pi
-redisInOut.sauvegardeArrosageConfigurationGicleurs(gicleurs)
+# gicleurs=initialiaseGicleurs()
+# rpiMethodes.initialiseRelaisGicleur(gicleurs)  # initialise gicleur sur le raspberry pi
+# redisInOut.sauvegardeArrosageConfigurationGicleurs(gicleurs)
 
 
-# confGeneral = redisInOut.recupereSystemeArrosageConfigurationGenerale()
-# gicleurs=redisInOut.recupereArrosageConfigurationGicleurs()
+confGeneral = redisInOut.recupereSystemeArrosageConfigurationGenerale()
+gicleurs=redisInOut.recupereArrosageConfigurationGicleurs()
 
 # redisInOut.StartSystemeArrosageRequete()
 
