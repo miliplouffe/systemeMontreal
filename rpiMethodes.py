@@ -178,20 +178,34 @@ def getValeursAlarme(equipementsAlarmes):
 def getValeursGicleurs(gicleurs):
     equipementsGicleurs=[]
     if gicleurs["1"].ZoneActive==True:
-        equipementsGicleurs.append(gicleur1.value)
+        if gicleur1.value == 1:
+            equipementsGicleurs.append(0)
+        else:
+            equipementsGicleurs.append(1)
     else:
          equipementsGicleurs.append(-1)
     if gicleurs["2"].ZoneActive==True:
-        equipementsGicleurs.append(gicleur1.value)
+        if gicleur2.value == 1:
+            equipementsGicleurs.append(0)
+        else:
+            equipementsGicleurs.append(1)
     else:
-         equipementsGicleurs.append(-1)        
+         equipementsGicleurs.append(-1)
     if gicleurs["3"].ZoneActive==True:
-        equipementsGicleurs.append(gicleur1.value)
+        if gicleur3.value == 1:
+            equipementsGicleurs.append(0)
+        else:
+            equipementsGicleurs.append(1)
     else:
          equipementsGicleurs.append(-1)
     if gicleurs["4"].ZoneActive==True:
-        equipementsGicleurs.append(gicleur1.value)
+        if gicleur4.value == 1:
+            equipementsGicleurs.append(0)
+        else:
+            equipementsGicleurs.append(1)
     else:
          equipementsGicleurs.append(-1)
+                  
+   
 
     return equipementsGicleurs

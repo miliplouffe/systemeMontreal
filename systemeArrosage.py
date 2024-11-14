@@ -11,7 +11,13 @@ import struct
 import RedisInOut as redisInOut
 import rpiMethodes
 
-redisIpAdresse="192.168.1.210"
+import socket
+
+hostname = socket.gethostname()
+IPAddr = socket.gethostbyname(hostname)
+
+redisIpAdresse=IPAddr
+
 redisInOut.InitialiseRedisClient(redisIpAdresse)
 
 NoZone=0
@@ -222,7 +228,7 @@ def initialiseConfigurationGenerale():
     confGeneral.ArrosageJourPairImpair="Pair"
     confGeneral.SystemArrosageActif=True
     confGeneral.SondePluieActive=False
-    confGeneral.HeureDebutArrosage=10
+    confGeneral.HeureDebutArrosage=4
     confGeneral.NombreJourInterval
 
     return confGeneral
@@ -286,7 +292,6 @@ def decodeDataDetecteur(gicleurValeurList, **gicleursStatut):
     recGicleur=GICLEURS_STATUT()
     recGicleur = gicleursStatut["1"]
     recGicleur.Statut = gicleurValeurList[0]
-
     recGicleur.DateHeureCourante = datetime.now()
     gicleursStatut["1"]=recGicleur
 
@@ -306,11 +311,8 @@ def decodeDataDetecteur(gicleurValeurList, **gicleursStatut):
     recGicleur = gicleursStatut["4"]
     recGicleur.Statut = gicleurValeurList[3]
     recGicleur.DateHeureCourante = datetime.now()
-    if recGicleur.Statut==0:
-        recGicleur.Statut=1
-    else:
-        recGicleur.Statut=0
     gicleursStatut["4"]=recGicleur
+    
     return gicleursStatut
 
 
@@ -443,27 +445,31 @@ def executeRequete(Requete):
 
 Requete=""
 
-confGeneral=dict()
+
 donneesArrosage=dict()
 donneesArrosage=initializeDonneesGenerales(**donneesArrosage)
-gicleurs=dict()
 gicleurEnCour = GICLEUR_EN_COUR()
 gicleursStatut=dict()
 gicleursStatut=initialiseGicleursStatut()
 
+
+confGeneral=dict()
 confGeneral=initialiseConfigurationGenerale()
-# redisInOut.sauvegardeSystemeArrosageConfigurationGenerale(confGeneral)
-# redisInOut.sauvegardeArrosageConfigurationGicleurs(gicleurs)
+redisInOut.sauvegardeSystemeArrosageConfigurationGenerale(confGeneral)
 
-confGeneral = redisInOut.recupereSystemeArrosageConfigurationGenerale()
-gicleurs=redisInOut.recupereArrosageConfigurationGicleurs()
+gicleurs=dict()
+gicleurs=initialiaseGicleurs()
+rpiMethodes.initialiseRelaisGicleur(gicleurs)  # initialise gicleur sur le raspberry pi
+redisInOut.sauvegardeArrosageConfigurationGicleurs(gicleurs)
+
+
+# confGeneral = redisInOut.recupereSystemeArrosageConfigurationGenerale()
+# gicleurs=redisInOut.recupereArrosageConfigurationGicleurs()
+
+# redisInOut.StartSystemeArrosageRequete()
+
 fermerGicleurs(gicleurs)
-
-redisInOut.StartSystemeArrosageRequete()
-redisInOut.startSystemeStatutGicleur()
-rpiMethodes.initialiseRelaisGicleur(gicleurs)
-
-
+print ("gicleur statut ", gicleursStatut)
 
 if __name__ == '__main__':
     global valeurPluie
@@ -482,7 +488,8 @@ if __name__ == '__main__':
             redisInOut.RunRedisInOut("StartSystemeArrosageRequete")    # check if task is running        
             gicleurValeurList = rpiMethodes.getValeursGicleurs(gicleurs) 
             gicleursStatut=decodeDataDetecteur(gicleurValeurList, **gicleursStatut)
-            # gicleurStatut est sauvegardé dans redis par le thread sendSystemeArrosageGicleursStatuts
+            redisInOut.publishSystemeStatutGicleurs(gicleursStatut)
+            
             Requete = redisInOut.getRequeteArrosage()
             sleep(1)
             executeRequete(Requete)
@@ -524,11 +531,10 @@ if __name__ == '__main__':
                         systemeArrosageEnCour=False
                         print(" arrosage arrete  ", dataRec.NoZone)
                         rpiMethodes.set_relais(dataRec.NoZone, False)   # arrête les gicleurs
-                        sleep(.5)
+                        sleep(1)
                         # sauvegardeMessageActivites(datetime.now(),gicleurEnCour.NoZone, "Arrosage terminé" )
-                        sleep(2)
-                        sauvegardeMessageLogs("Systeme arrosage Montreal :" + str(gicleurEnCour.NoZone) +"  Arrosage terminé")
 
+                        sauvegardeMessageLogs("Systeme arrosage Montreal :" + str(gicleurEnCour.NoZone) +"  Arrosage terminé")
                         donneesArrosage[dataRec.NoZone]=dataRec
 
             

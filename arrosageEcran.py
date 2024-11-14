@@ -15,8 +15,17 @@ from functools import partial
 import pickle
 import RedisInOut as redisInOut
 
+
 redisIpAdresse="192.168.1.210"
 redisInOut.InitialiseRedisClient(redisIpAdresse)
+
+statutGicleurMontrealTrue = 0
+statutGicleurMontrealFalse = 1
+statutGicleurWentworth_NordTrue = 1
+statutGicleurWentworth_NordFalse = 0
+
+statutGicleurTrue=statutGicleurMontrealTrue
+statutGicleurFalse=statutGicleurMontrealFalse
 
 Refresh=False
 
@@ -431,29 +440,38 @@ class MainWindow(QMainWindow):
         redisInOut.RunRedisInOut("startSystemeStatutGicleur")    # check if task is running
 
         gicleursStatut=redisInOut.getSystemeArrosageStatut()
-
         if len(gicleursStatut)==4:
-            print (" systeme arrose ", gicleursStatut["1"].statut)
-            if gicleursStatut["1"].statut==0:
+            if gicleursStatut["1"].Statut==statutGicleurTrue:
                 self.ui.groupBox_2.setStyleSheet("background-color:rgb(255,230,205);")
             else:
-                self.ui.groupBox_2.setStyleSheet("background-color:rgb(255,128,0);")
-                
-            if gicleursStatut["2"].statut==0:         
+                if gicleursStatut["1"].Statut==statutGicleurFalse:
+                    self.ui.groupBox_2.setStyleSheet("background-color:rgb(255,128,0);")
+                else:
+                    self.ui.groupBox_2.setStyleSheet("background-color:rgb(169.169.169);")
+
+            if gicleursStatut["2"].Statut==statutGicleurTrue:
                 self.ui.groupBox_3.setStyleSheet("background-color:rgb(255,230,205);")
             else:
-                self.ui.groupBox_3.setStyleSheet("background-color:rgb(255,128,0);")
+                if gicleursStatut["2"].Statut==statutGicleurFalse:
+                    self.ui.groupBox_3.setStyleSheet("background-color:rgb(255,128,0);")
+                else:
+                    self.ui.groupBox_3.setStyleSheet("background-color:rgb(169.169.169);")
 
-            if gicleursStatut["3"].statut==0:         
+            if gicleursStatut["3"].Statut==statutGicleurTrue:
                 self.ui.groupBox_4.setStyleSheet("background-color:rgb(255,230,205);")
             else:
-                self.ui.groupBox_4.setStyleSheet("background-color:rgb(255,128,0);")
-
-            if gicleursStatut["4"].statut==0:         
+                if gicleursStatut["3"].Statut==statutGicleurFalse:
+                    self.ui.groupBox_4.setStyleSheet("background-color:rgb(255,128,0);")
+                else:
+                    self.ui.groupBox_4.setStyleSheet("background-color:rgb(169.169.169);")
+                                        
+            if gicleursStatut["4"].Statut==statutGicleurTrue:
                 self.ui.groupBox_5.setStyleSheet("background-color:rgb(255,230,205);")
             else:
-                self.ui.groupBox_5.setStyleSheet("background-color:rgb(255,128,0);")
-                
+                if gicleursStatut["4"].Statut==statutGicleurFalse:
+                    self.ui.groupBox_5.setStyleSheet("background-color:rgb(255,128,0);")
+                else:
+                    self.ui.groupBox_5.setStyleSheet("background-color:rgb(169.169.169);")
                 #print ("ddddddddddddddddddddddddddddd", recGicleurs)
                 #ZoneArrosageMaintenant=recGicleurs
             
