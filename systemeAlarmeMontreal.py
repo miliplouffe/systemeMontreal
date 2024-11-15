@@ -6,7 +6,7 @@ import RedisInOut as redisInOut
 from dataclasses import dataclass
 from time import sleep
 from json import JSONEncoder
-import rpiMethodes
+import rpiMethodesMontreal
 
 import threading
 from datetime import datetime, timedelta
@@ -422,6 +422,8 @@ def sendSystemeAlarmeEquipement():
 
 if __name__ == '__main__':
 
+    rpiMethodesMontreal.initialiseDetecteurAlarmes()
+    
     Equipement = dict()
     Equipement = initialiseVariables(**Equipement)
     redisInOut.sauvegardeSystemeAlarme(**Equipement)
@@ -466,7 +468,9 @@ if __name__ == '__main__':
         Requete=redisInOut.getRequeteAlarme()
 
         try:
-            Detecteur = rpiMethodes.getValeursAlarme()
+            print("lecture alarme passe 1")
+            Detecteur = rpiMethodesMontreal.getValeursAlarme(Detecteur)
+            print("lecture alarme passe 1   ", Detecteur)
             Equipement = decodeDataDetecteur(Detecteur, **Equipement)
             Equipement = changeValeursPinsArmer(Equipement)
             redisInOut.publishSystemeAlarmeEquipement(Equipement)

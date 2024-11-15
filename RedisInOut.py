@@ -25,6 +25,7 @@ class const:
     systemeAlarmeRequete = "subscribeSystemeAlarmeRequete"
     systemeAlarmeEquipement = "susbscibeSystemeAlarme"
     systemeArrosageRequete = "subscribeSystemeArrosageRequete"
+    systemeArrosageMessage = "systemeArrosageMessage"
 
 gicleurConfiguration=dict()
 redisClient = redis.StrictRedis(host="", port=6379, charset="utf-8",decode_responses=True)
@@ -364,6 +365,22 @@ def subscribeSystemeArrosageStatut():
 
         else:
             redisClient = redis.StrictRedis(host=redisIpAdresseGlobal, port=6379, charset="utf-8", decode_responses=True) 
+
+def sauvegardeMessageSystemeArrosage(message):
+    global redisClient,redisIpAdresseGlobal
+
+    if is_redis_available():
+        try:
+            dataJson = jsonpickle.encode(message)
+            redisClient.set(const.systemeArrosageMessage, dataJson)
+
+        except Exception as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]    
+            # print(exc_type, fname, exc_tb.tb_lineno)
+        #redisClient.publish(const.publishNom, dataToSend)
+    else:
+        redisClient = redis.StrictRedis(host=redisIpAdresseGlobal, port=6379, charset="utf-8", decode_responses=True)
 
 t1 = threading.Thread(target=subscribeInterfaceRequete)
 t2 = threading.Thread(target=subscribeSystemeArrosageRequete)

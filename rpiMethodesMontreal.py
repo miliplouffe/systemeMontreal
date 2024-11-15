@@ -64,60 +64,50 @@ mcp = MCP23017(i2c, address=0x20)  # MCP23017
 # pin1 = mcp.get_pin(7)
 
 pinChambrePrincipale = mcp.get_pin(const.pinChambrePrincipale)
-pinChambrePrincipale.direction = digitalio.Direction.INPUT
-pinChambrePrincipale.pull = digitalio.Pull.UP
-
 pinChambreSecondaire = mcp.get_pin(const.pinChambreSecondaire)
-pinChambreSecondaire.direction = digitalio.Direction.INPUT
-pinChambreSecondaire.pull = digitalio.Pull.UP
-
 pinBureau = mcp.get_pin(const.pinBureau)
-pinBureau.direction = digitalio.Direction.INPUT
-pinBureau.pull = digitalio.Pull.UP
-
 pinSalon = mcp.get_pin(const.pinSalon)
-pinSalon.direction = digitalio.Direction.INPUT
-pinSalon.pull = digitalio.Pull.UP
-
 pinSousSol = mcp.get_pin(const.pinSousSol)
-pinSousSol.direction = digitalio.Direction.INPUT
-pinSousSol.pull = digitalio.Pull.UP
-
 pinSalleVernis = mcp.get_pin(const.pinSalleVernis)
-pinSalleVernis.direction = digitalio.Direction.INPUT
-pinSalleVernis.pull = digitalio.Pull.UP
-
 pinPorteAvant = mcp.get_pin(const.pinPorteAvant)
-pinPorteAvant.direction = digitalio.Direction.INPUT
-pinPorteAvant.pull = digitalio.Pull.UP
-
 pinPorteArriere = mcp.get_pin(const.pinPorteArriere)
-pinPorteArriere.direction = digitalio.Direction.INPUT
-pinPorteArriere.pull = digitalio.Pull.UP
-
 pinPorteSousSol = mcp.get_pin(const.pinPorteSousSol)
-pinPorteSousSol.direction = digitalio.Direction.INPUT
-pinPorteSousSol.pull = digitalio.Pull.UP
-
 pinSensorFumeeSalleBillard = mcp.get_pin(const.pinSensorFumeeSalleBillard)
-pinSensorFumeeSalleBillard.direction = digitalio.Direction.INPUT
-pinSensorFumeeSalleBillard.pull = digitalio.Pull.UP
-
-pinSensorFumeeSalleBillard = mcp.get_pin(const.pinSensorFumeeSalleBillard)
-pinSensorFumeeSalleBillard.direction = digitalio.Direction.INPUT
-pinSensorFumeeSalleBillard.pull = digitalio.Pull.UP
-
 pinEauAtelier = mcp.get_pin(const.pinEauAtelier)
-pinEauAtelier.direction = digitalio.Direction.INPUT
-pinEauAtelier.pull = digitalio.Pull.UP
-
 pinSensorFumeeAtelier = mcp.get_pin(const.pinSensorFumeeAtelier)
-pinSensorFumeeAtelier.direction = digitalio.Direction.INPUT
-pinSensorFumeeAtelier.pull = digitalio.Pull.UP
-
 pinSensorPluie = mcp.get_pin(const.pinSensorPluie)
-pinSensorPluie.direction = digitalio.Direction.INPUT
-pinSensorPluie.pull = digitalio.Pull.UP
+    
+def initialiseDetecteurAlarmes():
+    global pinChambrePrincipale,pinChambreSecondaire,pinBureau,pinSalon,pinSousSol
+    global pinSalleVernis,pinPorteAvant,pinPorteArriere,pinPorteSousSol,pinSensorFumeeSalleBillard
+    global pinEauAtelier,pinSensorFumeeAtelier,pinSensorPluie
+        
+    pinChambrePrincipale.direction = digitalio.Direction.INPUT
+    pinChambrePrincipale.pull = digitalio.Pull.UP
+    pinChambreSecondaire.direction = digitalio.Direction.INPUT
+    pinChambreSecondaire.pull = digitalio.Pull.UP
+    pinBureau.direction = digitalio.Direction.INPUT
+    pinBureau.pull = digitalio.Pull.UP
+    pinSalon.direction = digitalio.Direction.INPUT
+    pinSalon.pull = digitalio.Pull.UP
+    pinSousSol.direction = digitalio.Direction.INPUT
+    pinSousSol.pull = digitalio.Pull.UP
+    pinSalleVernis.direction = digitalio.Direction.INPUT
+    pinSalleVernis.pull = digitalio.Pull.UP
+    pinPorteAvant.direction = digitalio.Direction.INPUT
+    pinPorteAvant.pull = digitalio.Pull.UP
+    pinPorteArriere.direction = digitalio.Direction.INPUT
+    pinPorteArriere.pull = digitalio.Pull.UP
+    pinPorteSousSol.direction = digitalio.Direction.INPUT
+    pinPorteSousSol.pull = digitalio.Pull.UP
+    pinSensorFumeeSalleBillard.direction = digitalio.Direction.INPUT
+    pinSensorFumeeSalleBillard.pull = digitalio.Pull.UP
+    pinEauAtelier.direction = digitalio.Direction.INPUT
+    pinEauAtelier.pull = digitalio.Pull.UP
+    pinSensorFumeeAtelier.direction = digitalio.Direction.INPUT
+    pinSensorFumeeAtelier.pull = digitalio.Pull.UP
+    pinSensorPluie.direction = digitalio.Direction.INPUT
+    pinSensorPluie.pull = digitalio.Pull.UP
 
 
 gicleur1 = LED(const.pinGicleur1)
@@ -160,7 +150,14 @@ def set_relais(nomRelais, statut):
 
 
 def getValeursAlarme(equipementsAlarmes):
+    global pinChambrePrincipale,pinChambreSecondaire,pinBureau,pinSalon,pinSousSol
+    global pinSalleVernis,pinPorteAvant,pinPorteArriere,pinPorteSousSol,pinSensorFumeeSalleBillard
+    global pinEauAtelier,pinSensorFumeeAtelier,pinSensorPluie
+    
+    print ("passe 11")
     equipementsAlarmes.pinChambrePrincipale= pinChambrePrincipale.value
+    print ("passe 12")
+    equipementsAlarmes.pinChambreSecondaire =pinChambreSecondaire.value
     equipementsAlarmes.pinBureau= pinBureau.value
     equipementsAlarmes.pinSalon= pinSalon.value
     equipementsAlarmes.pinSousSol= pinSousSol.value
@@ -171,7 +168,7 @@ def getValeursAlarme(equipementsAlarmes):
     equipementsAlarmes.pinSensorFumeeSalleBillard= pinSensorFumeeSalleBillard.value
     equipementsAlarmes.pinEauAtelier= pinEauAtelier.value
     equipementsAlarmes.pinSensorPluie= pinSensorPluie.value
-
+    equipementsAlarmes.pinSensorFumeeAtelier= pinSensorFumeeAtelier.value
    
     return equipementsAlarmes
 

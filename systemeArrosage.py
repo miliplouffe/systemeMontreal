@@ -167,28 +167,29 @@ def sauvegardeMessageLogs(DataLOG):
     print (DataLOG)
 
 
-# def sauvegardeMessageActivites(DateMessage,NoZone,Message):
-#     
-#     messageActivite = MESSAGES_ACTIVITES(DateHeureCourante, NoZone, Message)
-#     messageActivite.DateMessage=DateMessage
-#     messageActivite.NoZone=NoZone
-#     messageActivite.Message=Message
-#     print (messageActivite)
-#     with open(directory + '/activiteArrosage.data', 'ab+') as fp:
-#        pickle.dump(messageActivite,fp)
-#        print("sauvegarde message activite")
-#         
-# def recupereRapportActivitesArrosage():
-# 
-#     activites = []
-#     with open(directory + '/activiteArrosage.data', 'rb') as fr:
-#         try:
-#             while True:
-#                 activites.append(pickle.load(fr))
-#         except EOFError:
-#             pass
-#     SendRapportActivitesArrosage(SendRec["RapportActivitesArrosage"].Ip, SendRec["RapportActivitesArrosage"].Port, activites)
+def sauvegardeMessageActivites(DateMessage,NoZone,Message):
+    
+    messageActivite = MESSAGES_ACTIVITES(DateHeureCourante, NoZone, Message)
+    messageActivite.DateMessage=DateMessage
+    messageActivite.NoZone=NoZone
+    messageActivite.Message=Message
+    print (messageActivite)
+    with open(directory + '/activiteArrosage.data', 'ab+') as fp:
+       pickle.dump(messageActivite,fp)
+       print("sauvegarde message activite")
+        
+def recupereRapportActivitesArrosage():
 
+    activites = []
+    with open(directory + '/activiteArrosage.data', 'rb') as fr:
+        try:
+            while True:
+                activites.append(pickle.load(fr))
+        except EOFError:
+            pass
+    SendRapportActivitesArrosage(SendRec["RapportActivitesArrosage"].Ip, SendRec["RapportActivitesArrosage"].Port, activites)
+    
+    
 def arrosageValide():
     global ValeurPluie
     global confGeneral
