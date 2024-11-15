@@ -18,7 +18,7 @@ valideCode=False
 construitCode=""
 requete=""
 
-redisIpAdresse="192.168.1.143"
+redisIpAdresse="192.168.1.210"
 redisInOut.InitialiseRedisClient(redisIpAdresse)
 
 class const:

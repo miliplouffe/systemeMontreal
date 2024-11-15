@@ -9,12 +9,17 @@ import socket,pickle
 from time import sleep
 import struct
 import RedisInOut as redisInOut
-import rpiMethodes
-
 import socket
 
 hostname = socket.gethostname()
 IPAddr = socket.gethostbyname(hostname)
+
+print (hostname)
+if hostname=="raspiMontreal":
+    import rpiMethodesMontreal as rpiMethodes
+else:
+    if hostname=="raspiWentworthNord":
+        import rpiMethodesWentworthNord as rpiMethodes
 
 redisIpAdresse=IPAddr
 
@@ -336,15 +341,14 @@ def fermerGicleurs(gicleurs):
         rpiMethodes.set_relais(4, False)   # arrête les gicleurs
     
 def executeRequete(Requete):
-    global gicleurs
+    global gicleurs,confGeneral
     
     if Requete!="":
-        print ("allo  xxxxxxx  ",Requete)
         redisInOut.setRequeteArrosageNil()            
         sleep(1)    
     
     if Requete == "NouvelleConfiguration":
-        sauvegardeMessageActivites(datetime.now(),"config general et gicleurs", "Changement de configuration")
+        # sauvegardeMessageActivites(datetime.now(),"config general et gicleurs", "Changement de configuration")
         confGeneral = redisInOut.recupereSystemeArrosageConfigurationGenerale()
         gicleurs=redisInOut.recupereArrosageConfigurationGicleurs()
         Requete=""
@@ -454,22 +458,21 @@ gicleursStatut=initialiseGicleursStatut()
 
 
 confGeneral=dict()
-confGeneral=initialiseConfigurationGenerale()
-redisInOut.sauvegardeSystemeArrosageConfigurationGenerale(confGeneral)
+# confGeneral=initialiseConfigurationGenerale()
+# redisInOut.sauvegardeSystemeArrosageConfigurationGenerale(confGeneral)
 
 gicleurs=dict()
 # gicleurs=initialiaseGicleurs()
-# rpiMethodes.initialiseRelaisGicleur(gicleurs)  # initialise gicleur sur le raspberry pi
 # redisInOut.sauvegardeArrosageConfigurationGicleurs(gicleurs)
 
 
 confGeneral = redisInOut.recupereSystemeArrosageConfigurationGenerale()
 gicleurs=redisInOut.recupereArrosageConfigurationGicleurs()
+rpiMethodes.initialiseRelaisGicleur(gicleurs)  # initialise gicleur sur le raspberry pi
 
 # redisInOut.StartSystemeArrosageRequete()
 
 fermerGicleurs(gicleurs)
-print ("gicleur statut ", gicleursStatut)
 
 if __name__ == '__main__':
     global valeurPluie
@@ -479,8 +482,8 @@ if __name__ == '__main__':
 
     sauvegardeMessageLogs("Systeme arrosage Montreal :" + "systeme demarre" )
 
-    t1 = threading.Thread(target=sendSystemeArrosageGicleursStatuts)
-    t1.start()
+    # t1 = threading.Thread(target=sendSystemeArrosageGicleursStatuts)
+    # t1.start()
 
     
     while True :  
