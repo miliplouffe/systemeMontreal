@@ -6,7 +6,7 @@ from PyQt5.QtCore  import *
 import time
 from datetime import datetime, timedelta
 import traceback, sys
-from alar import Ui_MainWindow
+from alarmeEcranDialo import Ui_MainWindow
 from functools import partial
 from dataclasses import dataclass
 
