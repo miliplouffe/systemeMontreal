@@ -5,7 +5,7 @@ from PyQt5.QtCore  import *
 import time
 from datetime import datetime, timedelta
 import traceback, sys
-from alarmeEcranDialog import Ui_MainWindow
+from alarmeEcranDialogMontreal import Ui_MainWindow
 from functools import partial
 from dataclasses import dataclass
 import pickle
