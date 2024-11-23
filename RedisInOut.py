@@ -5,8 +5,11 @@ sys.path.append("/home/pi/.local/lib/python3.9/site-packages/")
 sys.path.append("/home/miliplouffe/.local/lib/python3.11/site-packages/")
 import threading,os,sys
 from time import sleep
+from datetime import datetime
 import jsonpickle
 import redis
+import systemeArrosageDataClass as dc
+
 
 # ipaddressRedis='192.168.1.102'
 # ipaddressRedis=''
@@ -44,6 +47,7 @@ def InitialiseRedisClient(redisIpAdresse):
     global gicleurConfiguration, redisClient, RequeteInterface, RequeteAlarme, DetecteurArrosage, DetecteurAlarme, RequeteArrosage
     global redisIpAdresseGlobal
 
+    decode_responses=True
     redisIpAdresseGlobal=redisIpAdresse
     redisClient = redis.StrictRedis(host=redisIpAdresse, port=6379, charset="utf-8",decode_responses=True)
     RequeteInterface = ""
@@ -368,12 +372,48 @@ def subscribeSystemeArrosageStatut():
 
 def sauvegardeMessageSystemeArrosage(message):
     global redisClient,redisIpAdresseGlobal
+    
+    # HDEL myhash field1
 
     if is_redis_available():
         try:
-            dataJson = jsonpickle.encode(message)
-            redisClient.set(const.systemeArrosageMessage, dataJson)
+            dataToSend = jsonpickle.encode(message)
+            messageDate = datetime.now()
+            redisClient.hset ("systemeArrosageMessage", str(messageDate), str(dataToSend))
+        except Exception as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]    
+            print(exc_type, fname, exc_tb.tb_lineno)
+        #redisClient.publish(const.publishNom, dataToSend)
+    else:
+        redisClient = redis.StrictRedis(host=redisIpAdresseGlobal, port=6379, charset="utf-8", decode_responses=True)
+        
+def recupereMessageSystemeArrosage(key):
+    global redisClient,redisIpAdresseGlobal
+    message=""
+    
+    if is_redis_available():
+        try:
+            print("----- 1")
+            message = redisClient.hgetall(key)
 
+            print("----- 2")
+        except Exception as e:
+                    print (e)
+                    exc_type, exc_obj, exc_tb = sys.exc_info()
+                    fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]    
+    else:
+        redisClient = redis.StrictRedis(host=redisIpAdresseGlobal, port=6379, charset="utf-8", decode_responses=True) 
+    return message
+
+def deteteOldRecords():
+    global redisClient,redisIpAdresseGlobal
+    
+    # HDEL myhash field1
+
+    if is_redis_available():
+        try:
+           print(1)
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]    
@@ -381,6 +421,7 @@ def sauvegardeMessageSystemeArrosage(message):
         #redisClient.publish(const.publishNom, dataToSend)
     else:
         redisClient = redis.StrictRedis(host=redisIpAdresseGlobal, port=6379, charset="utf-8", decode_responses=True)
+
 
 t1 = threading.Thread(target=subscribeInterfaceRequete)
 t2 = threading.Thread(target=subscribeSystemeArrosageRequete)

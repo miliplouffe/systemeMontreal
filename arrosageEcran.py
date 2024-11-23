@@ -12,12 +12,13 @@ from datetime import datetime, timedelta
 import traceback, sys
 from arrosageDialog import Ui_MainWindow
 from functools import partial
-import pickle
+import jsonpickle
 import RedisInOut as redisInOut
+import systemeArrosageDataClass as dc
 
 
-# redisIpAdresse="192.168.1.210"
-redisIpAdresse="192.168.1.143"
+redisIpAdresse="192.168.1.210"
+# redisIpAdresse="192.168.1.143"
 redisInOut.InitialiseRedisClient(redisIpAdresse)
 
 statutGicleurMontrealTrue = 0
@@ -41,37 +42,37 @@ class const:
     clefMessage              = "MessageClef"
 
 
-@dataclass
-class GICLEURS:
-    NoZone: int = 0
-    ZoneNom: str = ""
-    ZonePhysique: str = ""
-    ZoneActive: bool = False
-    TempsArrosage: int = 0
-    Affichage: bool = False
-    AffichageWeb: bool = False
-    MessageErreur: str = ""
-
-@dataclass
-class GICLEURS_STATUT:  
-    NoZone: int = 0
-    statut: bool = False
-    Action: str = ""
-
-@dataclass
-class ARROSAGE_DATA:
-    NoZone: int = 0
-    TempsArrosage: int = 0
-    ArrosageEnCour: bool = False
-    ArrosageTermine: bool = False
-
-@dataclass
-class CONFIGURATION_GENERALE:
-    HeureDebutArrosage: str = ""   
-    SystemArrosageActif: bool = False         
-    SondePluieActive: bool = False           
-    ArrosageJourPairImpair: str = ""
-    NombreJourInterval: int = 0    
+# @dataclass
+# class GICLEURS:
+#     NoZone: int = 0
+#     ZoneNom: str = ""
+#     ZonePhysique: str = ""
+#     ZoneActive: bool = False
+#     TempsArrosage: int = 0
+#     Affichage: bool = False
+#     AffichageWeb: bool = False
+#     MessageErreur: str = ""
+# 
+# @dataclass
+# class GICLEURS_STATUT:  
+#     NoZone: int = 0
+#     statut: bool = False
+#     Action: str = ""
+# 
+# @dataclass
+# class ARROSAGE_DATA:
+#     NoZone: int = 0
+#     TempsArrosage: int = 0
+#     ArrosageEnCour: bool = False
+#     ArrosageTermine: bool = False
+# 
+# @dataclass
+# class CONFIGURATION_GENERALE:
+#     HeureDebutArrosage: str = ""   
+#     SystemArrosageActif: bool = False         
+#     SondePluieActive: bool = False           
+#     ArrosageJourPairImpair: str = ""
+#     NombreJourInterval: int = 0    
 
     
 NoZone=0
@@ -208,7 +209,7 @@ class MainWindow(QMainWindow):
         valide=True
 
         for recGicleurs in gicleursStatut:
-            if gicleursStatut[recGicleurs].statut==1:
+            if gicleursStatut[recGicleurs].Statut==1:
                 ZoneArrosageMaintenant=recGicleurs
                 valide=False
 
@@ -288,49 +289,48 @@ class MainWindow(QMainWindow):
         global gicleurs
         global Refresh
 
-        # if value=="OuvrirMessages":
-        #   #  GicleursSystemeAction(SendRec["GicleursSystemeAction"].Ip, SendRec["GicleursSystemeAction"].Port, "recupereRapportActivitesArrosage")
-        #     
-        #   # header = self.ui.Logs.horizontalHeader()       
-        #   # header.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)
-        #   # header.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
-        #   # header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
- # 
-# 
-# 
-        #   # #self.ui.Logs.setColumnWidth(0, 150)
-        #   # #self.ui.Logs.setColumnWidth(1, 150)
-        #   # #self.ui.Logs.setColumnWidth(2, 400)
-# 
-        #   # self.ui.Logs.setRowCount(0)
-# 
-        #   # for ligne in tableData:
-        #   #     rowPosition = self.ui.Logs.rowCount()
-        #   #     self.ui.Logs.insertRow(rowPosition)
-        #   #         
-        #   #     data = ligne.split(",")
-        #   #     self.ui.Logs.setItem(rowPosition , 0, QtWidgets.QTableWidgetItem(str(data[0])))
-        #   #     self.ui.Logs.setItem(rowPosition , 1, QtWidgets.QTableWidgetItem(str(data[1])))
-        #   #     self.ui.Logs.setItem(rowPosition , 2, QtWidgets.QTableWidgetItem(str(data[2])))
-# 
-# 
-        #   # self.ui.Logs.update()
-        #   # self.ui.Logs.setVisible(True)
+        if value=="OuvrirMessages":
+            # GicleursSystemeAction(SendRec["GicleursSystemeAction"].Ip, SendRec["GicleursSystemeAction"].Port, "recupereRapportActivitesArrosage")
+           
+            header = self.ui.Logs.horizontalHeader()       
+            header.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)
+            header.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
+            header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
+
+            self.ui.Logs.setColumnWidth(0, 150)
+            self.ui.Logs.setColumnWidth(1, 150)
+            self.ui.Logs.setColumnWidth(2, 400)
+
+            self.ui.Logs.setRowCount(0)
+
+            tableData = redisInOut.recupereMessageSystemeArrosage("systemeArrosageMessage")
+            # print ("---------------------- ",xxx)  
+            for keys in tableData:
+                messageRec = jsonpickle.decode(tableData[keys])
+                rowPosition = self.ui.Logs.rowCount()
+                self.ui.Logs.insertRow(rowPosition)
+                    
+                self.ui.Logs.setItem(rowPosition , 0, QtWidgets.QTableWidgetItem(str(messageRec.DateMessage)))
+                self.ui.Logs.setItem(rowPosition , 1, QtWidgets.QTableWidgetItem(str(messageRec.NoZone)))
+                self.ui.Logs.setItem(rowPosition , 2, QtWidgets.QTableWidgetItem(str(messageRec.Message)))
         # 
+        # 
+                self.ui.Logs.update()
+                self.ui.Logs.setVisible(True)
+        
 
         if value=="FermerMessages":
             self.ui.Logs.setVisible(False)
 
         if value=="Sauvegarde":
-            confGeneral=CONFIGURATION_GENERALE()
+            confGeneral=dc.CONFIGURATION_GENERALE()
             confGeneral.SystemArrosageActif=self.ui.ArrosageActif.isChecked()
             confGeneral.SondePluieActive=self.ui.DetecteurPluieActif.isChecked()
             confGeneral.HeureDebutArrosage=self.ui.HeureArrosage.value()
             confGeneral.ArrosageJourPairImpair=self.ui.JourArrosage.currentText()
             confGeneral.NombreJourInterval=self.ui.IntervalEntreArrosage.value()
-
-            # recGicleur=GICLEURS()
     
+            recGicleur=dc.GICLEURS()
             recGicleur=gicleurs["1"]
             recGicleur.NoZone=self.ui.NoZone1.text()
             recGicleur.ZoneActive=self.ui.Zone1Active.isChecked()
@@ -338,7 +338,7 @@ class MainWindow(QMainWindow):
             recGicleur.ZonePhysique=self.ui.Zone1Physique.toPlainText()
             gicleurs[recGicleur.NoZone]=recGicleur
 
-            recGicleur=GICLEURS()
+            recGicleur=dc.GICLEURS()
             recGicleur=gicleurs["2"]
             recGicleur.NoZone=self.ui.NoZone2.text()
             recGicleur.ZoneActive=self.ui.Zone2Active.isChecked()
@@ -346,7 +346,7 @@ class MainWindow(QMainWindow):
             recGicleur.ZonePhysique=self.ui.Zone2Physique.toPlainText()
             gicleurs[recGicleur.NoZone]=recGicleur
 
-            recGicleur=GICLEURS()
+            recGicleur=dc.GICLEURS()
             recGicleur=gicleurs["3"]
             recGicleur.NoZone=self.ui.NoZone3.text()
             recGicleur.ZoneActive=self.ui.Zone3Active.isChecked()
@@ -354,7 +354,7 @@ class MainWindow(QMainWindow):
             recGicleur.ZonePhysique=self.ui.Zone3Physique.toPlainText()
             gicleurs[recGicleur.NoZone]=recGicleur
 
-            recGicleur=GICLEURS()
+            recGicleur=dc.GICLEURS()
             recGicleur=gicleurs["4"]
             recGicleur.NoZone=self.ui.NoZone4.text()
             recGicleur.ZoneActive=self.ui.Zone4Active.isChecked()
@@ -393,14 +393,17 @@ class MainWindow(QMainWindow):
 
         self.ui.Logs.setRowCount(0)
 
-        for ligne in tableData:
+        tableData = redisInOut.recupereMessageSystemeArrosage("systemeArrosageMessage")
+            # print ("---------------------- ",xxx)
+        print (" recupere table data ", tableData)    
+        for keys in tableData:
+            messageRec = jsonpickle.decode(tableData[keys])
             rowPosition = self.ui.Logs.rowCount()
             self.ui.Logs.insertRow(rowPosition)
                 
-            data = ligne.split(",")
-            self.ui.Logs.setItem(rowPosition , 0, QtWidgets.QTableWidgetItem(str(data[0])))
-            self.ui.Logs.setItem(rowPosition , 1, QtWidgets.QTableWidgetItem(str(data[1])))
-            self.ui.Logs.setItem(rowPosition , 2, QtWidgets.QTableWidgetItem(str(data[2])))
+            self.ui.Logs.setItem(rowPosition , 0, QtWidgets.QTableWidgetItem(str(messageRec.DateMessage)))
+            self.ui.Logs.setItem(rowPosition , 1, QtWidgets.QTableWidgetItem(str(messageRec.NoZone)))
+            self.ui.Logs.setItem(rowPosition , 2, QtWidgets.QTableWidgetItem(str(messageRec.Message)))
 
 
         self.ui.Logs.update()
@@ -520,7 +523,7 @@ class MainWindow(QMainWindow):
 
 def initialiseConfigurationGenerale():
     global GicleurAssocie
-    confGeneral=CONFIGURATION_GENERALE()
+    confGeneral=dc.CONFIGURATION_GENERALE()
 
     confGeneral.ArrosageJourPairImpair="Pair"
     confGeneral.SystemArrosageActif=True
@@ -562,7 +565,7 @@ def initialiseConfigurationGenerale():
 
 def initialiseConfigurationGenerale():
     global GicleurAssocie
-    confGeneral=CONFIGURATION_GENERALE()
+    confGeneral=dc.CONFIGURATION_GENERALE()
 
     confGeneral.ArrosageJourPairImpair="Pair"
     confGeneral.SystemArrosageActif=False
@@ -574,7 +577,7 @@ def initialiseConfigurationGenerale():
 
 
 def initialiaseGicleurs(**gicleurs):
-    gicleurRec=GICLEURS()
+    gicleurRec=dc.GICLEURS()
     gicleurRec.NoZone=1
     gicleurRec.ZoneNom="Gicleur_1_"
     gicleurRec.ZoneActive=True
@@ -585,7 +588,7 @@ def initialiaseGicleurs(**gicleurs):
     gicleurRec.ZonePhysique="Avant près de la rue"
     gicleurs[str(gicleurRec.NoZone)]=gicleurRec
 
-    gicleurRec=GICLEURS()
+    gicleurRec=dc.GICLEURS()
     gicleurRec.NoZone=2
     gicleurRec.ZoneNom="Gicleur_2_"
     gicleurRec.ZoneActive=False
@@ -596,7 +599,7 @@ def initialiaseGicleurs(**gicleurs):
     gicleurRec.ZonePhysique="Avant près de la maison"
     gicleurs[str(gicleurRec.NoZone)]=gicleurRec
 
-    gicleurRec=GICLEURS()
+    gicleurRec=dc.GICLEURS()
     gicleurRec.NoZone=3
     gicleurRec.ZoneNom="Gicleur_3_"
     gicleurRec.ZoneActive=False
@@ -607,7 +610,7 @@ def initialiaseGicleurs(**gicleurs):
     gicleurRec.ZonePhysique="coté de la maison"
     gicleurs[str(gicleurRec.NoZone)]=gicleurRec
 
-    gicleurRec=GICLEURS()
+    gicleurRec=dc.GICLEURS()
     gicleurRec.NoZone=4
     gicleurRec.ZoneNom="Gicleur_4_"
     gicleurRec.ZoneActive=False
@@ -630,7 +633,7 @@ class SOCKET_ACCESS:
 
 
 def sauvegardeMessageActivites(DateMessage,NoZone,Message):
-    print ("sauvegarde a coder ")
+    redisInOut.sauvegardeMessageSystemeArrosage(DateMessage,NoZone,Message)
 
     
 
@@ -643,6 +646,7 @@ gicleurs=redisInOut.recupereArrosageConfigurationGicleurs()
 confGeneral=redisInOut.recupereSystemeArrosageConfigurationGenerale()
 redisInOut.startSystemeStatutGicleur()
 
+print ("---------------  ", confGeneral)
 # sleep(.1)
 # print ("passe 1")
 # redisInOut.publishSystemeArrosageRequete("RecupereConfiguration")

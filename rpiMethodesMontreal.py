@@ -14,6 +14,7 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from gpiozero import LED
 from time import sleep
+import systemeArrosageDataClass as dc
 
 led = LED(17)
 led.on()
@@ -118,6 +119,7 @@ gicleur4 = LED(const.pinGicleur4)
 
 def initialiseRelaisGicleur(gicleurs):
     global gicleur1, gicleur2, gicleur3,gicleur4
+    
     if gicleurs["1"].ZoneActive==True:
         gicleur1.on()
     if gicleurs["2"].ZoneActive==True:

@@ -10,6 +10,7 @@ from time import sleep
 import struct
 import RedisInOut as redisInOut
 import socket
+import systemeArrosageDataClass as dc
 
 hostname = socket.gethostname()
 IPAddr = socket.gethostbyname(hostname)
@@ -64,74 +65,74 @@ class const:
     nombreCourrielQuotidien        = 5
 
 
-@dataclass
-class MESSAGES_ACTIVITES:
-    DateMessage: datetime = datetime.now()
-    NoZone: int= 0
-    Message: str = ""
-
-
-@dataclass
-class GICLEURS:
-    NoZone: int = 0
-    ZoneNom: str = ""
-    ZonePhysique: str = ""
-    ZoneActive: bool = False
-    TempsArrosage: int = 0
-    Affichage: bool = False
-    AffichageWeb: bool = False
-    MessageErreur: str = ""
-
-@dataclass
-class ARROSAGE_DATA:
-    NoZone: int = 0
-    TempsArrosage: int = 0
-    ArrosageEnCour: bool = False
-    ArrosageTermine: bool = False
-
-@dataclass
-class CONFIGURATION_GENERALE:
-    HeureDebutArrosage: str = ""   
-    SystemArrosageActif: bool = False         
-    SondePluieActive: bool = False           
-    ArrosageJourPairImpair: str = ""
-    NombreJourInterval: int = 0    
-
-@dataclass
-class GICLEURS_STATUT:  
-    NoZone: int = 0
-    Statut: bool = False
-
-@dataclass
-class GICLEUR_EN_COUR:  
-    NoZone: int = 0  
-    HeureDepartArrosage: int = 0  
+# @dataclass
+# class MESSAGES_ACTIVITES:
+#     DateMessage: datetime = datetime.now()
+#     NoZone: int= 0
+#     Message: str = ""
+# 
+# 
+# @dataclass
+# class GICLEURS:
+#     NoZone: int = 0
+#     ZoneNom: str = ""
+#     ZonePhysique: str = ""
+#     ZoneActive: bool = False
+#     TempsArrosage: int = 0
+#     Affichage: bool = False
+#     AffichageWeb: bool = False
+#     MessageErreur: str = ""
+# 
+# @dataclass
+# class ARROSAGE_DATA:
+#     NoZone: int = 0
+#     TempsArrosage: int = 0
+#     ArrosageEnCour: bool = False
+#     ArrosageTermine: bool = False
+# 
+# @dataclass
+# class CONFIGURATION_GENERALE:
+#     HeureDebutArrosage: str = ""   
+#     SystemArrosageActif: bool = False         
+#     SondePluieActive: bool = False           
+#     ArrosageJourPairImpair: str = ""
+#     NombreJourInterval: int = 0    
+# 
+# @dataclass
+# class GICLEURS_STATUT:  
+#     NoZone: int = 0
+#     Statut: bool = False
+# 
+# @dataclass
+# class GICLEUR_EN_COUR:  
+#     NoZone: int = 0  
+#     HeureDepartArrosage: int = 0  
 
 
 # pour info
 def initializeDonneesGenerales(**donneesArrosage):
-    donneesGeneralesRec=ARROSAGE_DATA()
+    donneesGeneralesRec=dc.ARROSAGE_DATA()
     donneesGeneralesRec.ArrosageEnCour=False
     donneesGeneralesRec.ArrosageTermine=False
     donneesGeneralesRec.NoZone="1"
     donneesGeneralesRec.TempsArrosage=2
     donneesArrosage[donneesGeneralesRec.NoZone]=donneesGeneralesRec
 
-    donneesGeneralesRec=ARROSAGE_DATA()
+    donneesGeneralesRec=dc.ARROSAGE_DATA()
     donneesGeneralesRec.ArrosageEnCour=False
     donneesGeneralesRec.ArrosageTermine=False
     donneesGeneralesRec.NoZone="2"
     donneesGeneralesRec.TempsArrosage=2
     donneesArrosage[donneesGeneralesRec.NoZone]=donneesGeneralesRec
 
-    donneesGeneralesRec=ARROSAGE_DATA()
+    donneesGeneralesRec=dc.ARROSAGE_DATA()
     donneesGeneralesRec.ArrosageEnCour=False
     donneesGeneralesRec.ArrosageTermine=False
     donneesGeneralesRec.NoZone="3"
     donneesGeneralesRec.TempsArrosage=2
     donneesArrosage[donneesGeneralesRec.NoZone]=donneesGeneralesRec
 
-    donneesGeneralesRec=ARROSAGE_DATA()
+    donneesGeneralesRec=dc.ARROSAGE_DATA()
     donneesGeneralesRec.ArrosageEnCour=False
     donneesGeneralesRec.ArrosageTermine=False
     donneesGeneralesRec.NoZone="4"
@@ -140,22 +141,22 @@ def initializeDonneesGenerales(**donneesArrosage):
     return donneesArrosage
 
 def initialiseGicleursStatut(**gicleursStatut):
-    gicleurRec = GICLEURS_STATUT()
+    gicleurRec = dc.GICLEURS_STATUT()
     gicleurRec.NoZone = 1
     gicleurRec.Statut = 0
     gicleursStatut[str(gicleurRec.NoZone)] = gicleurRec
 
-    gicleurRec = GICLEURS_STATUT()
+    gicleurRec = dc.GICLEURS_STATUT()
     gicleurRec.NoZone = 2
     gicleurRec.Statut = 0
     gicleursStatut[str(gicleurRec.NoZone)] = gicleurRec
 
-    gicleurRec = GICLEURS_STATUT()
+    gicleurRec = dc.GICLEURS_STATUT()
     gicleurRec.NoZone = 3
     gicleurRec.Statut = 0
     gicleursStatut[str(gicleurRec.NoZone)] = gicleurRec
 
-    gicleurRec = GICLEURS_STATUT()
+    gicleurRec = dc.GICLEURS_STATUT()
     gicleurRec.NoZone = 4
     gicleurRec.Statut = 0
     gicleursStatut[str(gicleurRec.NoZone)] = gicleurRec
@@ -163,31 +164,27 @@ def initialiseGicleursStatut(**gicleursStatut):
     return gicleursStatut
 
 
-def sauvegardeMessageLogs(DataLOG):
-    print (DataLOG)
-
 
 def sauvegardeMessageActivites(DateMessage,NoZone,Message):
     
-    messageActivite = MESSAGES_ACTIVITES(DateHeureCourante, NoZone, Message)
+    messageActivite = dc.MESSAGES_ACTIVITES(DateHeureCourante, NoZone, Message)
     messageActivite.DateMessage=DateMessage
     messageActivite.NoZone=NoZone
     messageActivite.Message=Message
-    print (messageActivite)
-    with open(directory + '/activiteArrosage.data', 'ab+') as fp:
-       pickle.dump(messageActivite,fp)
-       print("sauvegarde message activite")
+    
+    redisInOut.sauvegardeMessageSystemeArrosage(messageActivite)
+    
         
-def recupereRapportActivitesArrosage():
-
-    activites = []
-    with open(directory + '/activiteArrosage.data', 'rb') as fr:
-        try:
-            while True:
-                activites.append(pickle.load(fr))
-        except EOFError:
-            pass
-    SendRapportActivitesArrosage(SendRec["RapportActivitesArrosage"].Ip, SendRec["RapportActivitesArrosage"].Port, activites)
+# def recupereRapportActivitesArrosage():
+# 
+#     activites = []
+#     with open(directory + '/activiteArrosage.data', 'rb') as fr:
+#         try:
+#             while True:
+#                 activites.append(pickle.load(fr))
+#         except EOFError:
+#             pass
+#     # SendRapportActivitesArrosage(SendRec["RapportActivitesArrosage"].Ip, SendRec["RapportActivitesArrosage"].Port, activites)
     
     
 def arrosageValide():
@@ -229,7 +226,7 @@ def arrosageValide():
 
 def initialiseConfigurationGenerale():
     global GicleurAssocie
-    confGeneral=CONFIGURATION_GENERALE()
+    confGeneral=dc.CONFIGURATION_GENERALE()
 
     confGeneral.ArrosageJourPairImpair="Pair"
     confGeneral.SystemArrosageActif=True
@@ -241,7 +238,7 @@ def initialiseConfigurationGenerale():
 
 
 def initialiaseGicleurs(**gicleurs):
-    gicleurRec=GICLEURS()
+    gicleurRec=dc.GICLEURS()
     gicleurRec.NoZone=1
     gicleurRec.ZoneNom="relais1"
     gicleurRec.ZoneActive=True
@@ -252,7 +249,7 @@ def initialiaseGicleurs(**gicleurs):
     gicleurRec.ZonePhysique="Avant près de la rue"
     gicleurs[str(gicleurRec.NoZone)]=gicleurRec
 
-    gicleurRec=GICLEURS()
+    gicleurRec=dc.GICLEURS()
     gicleurRec.NoZone=2
     gicleurRec.ZoneNom="relais2"
     gicleurRec.ZoneActive=True
@@ -263,7 +260,7 @@ def initialiaseGicleurs(**gicleurs):
     gicleurRec.ZonePhysique="Arrière Ail"
     gicleurs[str(gicleurRec.NoZone)]=gicleurRec   
 
-    gicleurRec=GICLEURS()
+    gicleurRec=dc.GICLEURS()
     gicleurRec.NoZone=3
     gicleurRec.ZoneNom="relais3"
     gicleurRec.ZoneActive=True
@@ -274,7 +271,7 @@ def initialiaseGicleurs(**gicleurs):
     gicleurRec.ZonePhysique="Avant près de la maison et le coté"
     gicleurs[str(gicleurRec.NoZone)]=gicleurRec
 
-    gicleurRec=GICLEURS()
+    gicleurRec=dc.GICLEURS()
     gicleurRec.NoZone=4
     gicleurRec.ZoneNom="relais4"
     gicleurRec.ZoneActive=True
@@ -295,25 +292,25 @@ def initialiaseGicleurs(**gicleurs):
   
 def decodeDataDetecteur(gicleurValeurList, **gicleursStatut):
 
-    recGicleur=GICLEURS_STATUT()
+    recGicleur=dc.GICLEURS_STATUT()
     recGicleur = gicleursStatut["1"]
     recGicleur.Statut = gicleurValeurList[0]
     recGicleur.DateHeureCourante = datetime.now()
     gicleursStatut["1"]=recGicleur
 
-    recGicleur=GICLEURS_STATUT()
+    recGicleur=dc.GICLEURS_STATUT()
     recGicleur = gicleursStatut["2"]
     recGicleur.Statut = gicleurValeurList[1]
     recGicleur.DateHeureCourante = datetime.now()
     gicleursStatut["2"]=recGicleur
 
-    recGicleur=GICLEURS_STATUT()
+    recGicleur=dc.GICLEURS_STATUT()
     recGicleur = gicleursStatut["3"]
     recGicleur.Statut = gicleurValeurList[2]
     recGicleur.DateHeureCourante = datetime.now()
     gicleursStatut["3"]=recGicleur
 
-    recGicleur=GICLEURS_STATUT()
+    recGicleur=dc.GICLEURS_STATUT()
     recGicleur = gicleursStatut["4"]
     recGicleur.Statut = gicleurValeurList[3]
     recGicleur.DateHeureCourante = datetime.now()
@@ -321,9 +318,6 @@ def decodeDataDetecteur(gicleurValeurList, **gicleursStatut):
     
     return gicleursStatut
 
-
-def sauvegardeMessageActivites(Message):
-    print ("En construction")
 
 def sendSystemeArrosageGicleursStatuts():
     global gicleursStatut
@@ -349,7 +343,7 @@ def executeRequete(Requete):
         sleep(1)    
     
     if Requete == "NouvelleConfiguration":
-        # sauvegardeMessageActivites(datetime.now(),"config general et gicleurs", "Changement de configuration")
+        sauvegardeMessageActivites(datetime.now(),"config general et gicleurs", "Changement de configuration")
         confGeneral = redisInOut.recupereSystemeArrosageConfigurationGenerale()
         gicleurs=redisInOut.recupereArrosageConfigurationGicleurs()
         Requete=""
@@ -362,98 +356,98 @@ def executeRequete(Requete):
     elif Requete == "GicleurSet1" and gicleurs["1"].ZoneActive==True:
         dataRec=donneesArrosage["1"]
         dataRec.ArrosageTermine=True
-        # sauvegardeMessageActivites(datetime.now(),dataRec.NoZone, "Set gicleur arrosage termine")
+        sauvegardeMessageActivites(datetime.now(),dataRec.NoZone, "Set gicleur arrosage termine")
         Requete=""
         redisInOut.setRequeteArrosageNil()
     elif Requete == "GicleurReSet1" and gicleurs["1"].ZoneActive==True:
         dataRec=donneesArrosage["1"]
         dataRec.ArrosageTermine=False
-        # sauvegardeMessageActivites(datetime.now(),dataRec.NoZone, "Set gicleur près pour arrosage")
+        sauvegardeMessageActivites(datetime.now(),dataRec.NoZone, "Set gicleur près pour arrosage")
         Requete=""
         redisInOut.setRequeteArrosageNil()
     elif Requete == "GicleurSet2" and gicleurs["1"].ZoneActive==True:
         dataRec=donneesArrosage["2"]
         dataRec.ArrosageTermine=True
-        # sauvegardeMessageActivites(datetime.now(),dataRec.NoZone, "Set gicleur arrosage termine")
+        sauvegardeMessageActivites(datetime.now(),dataRec.NoZone, "Set gicleur arrosage termine")
         Requete=""
         redisInOut.setRequeteArrosageNil()
     elif Requete == "GicleurReSet2" and gicleurs["2"].ZoneActive==True:
         dataRec=donneesArrosage["2"]
         dataRec.ArrosageTermine=False
-        # sauvegardeMessageActivites(datetime.now(),dataRec.NoZone, "Set gicleur près pour arrosage")
+        sauvegardeMessageActivites(datetime.now(),dataRec.NoZone, "Set gicleur près pour arrosage")
         Requete=""
         redisInOut.setRequeteArrosageNil()
     elif Requete == "GicleurSet3" and gicleurs["3"].ZoneActive==True:
         dataRec=donneesArrosage["3"]
         dataRec.ArrosageTermine=True
-        # sauvegardeMessageActivites(datetime.now(),dataRec.NoZone, "Set gicleur arrosage termine")
+        sauvegardeMessageActivites(datetime.now(),dataRec.NoZone, "Set gicleur arrosage termine")
         Requete=""
         redisInOut.setRequeteArrosageNil()
     elif Requete == "GicleurReSet3" and gicleurs["3"].ZoneActive==True:
         dataRec=donneesArrosage["3"]
         dataRec.ArrosageTermine=False
-        # sauvegardeMessageActivites(datetime.now(),dataRec.NoZone, "Set gicleur près pour arrosage")
+        sauvegardeMessageActivites(datetime.now(),dataRec.NoZone, "Set gicleur près pour arrosage")
         Requete=""
         redisInOut.setRequeteArrosageNil()
     elif Requete == "GicleurSet4" and gicleurs["4"].ZoneActive==True:
         dataRec=donneesArrosage["4"]
         dataRec.ArrosageTermine=True
-        # sauvegardeMessageActivites(datetime.now(),dataRec.NoZone, "Set gicleur arrosage termine")
+        sauvegardeMessageActivites(datetime.now(),dataRec.NoZone, "Set gicleur arrosage termine")
         Requete=""
         redisInOut.setRequeteArrosageNil()
     elif Requete == "GicleurReSet4" and gicleurs["4"].ZoneActive==True:
         dataRec=donneesArrosage["4"]
         dataRec.ArrosageTermine=False
-        # sauvegardeMessageActivites(datetime.now(),dataRec.NoZone, "Set gicleur près pour arrosage")
+        sauvegardeMessageActivites(datetime.now(),dataRec.NoZone, "Set gicleur près pour arrosage")
         Requete=""
         redisInOut.setRequeteArrosageNil()
     elif Requete == "Gicleur_1_ON" and ArrosageEnCour==False and gicleurs["1"].ZoneActive==True:
         rpiMethodes.set_relais("1", True)   # ouvre le gicleur pour arrosage
         Requete=""
         redisInOut.setRequeteArrosageNil()
-        # sauvegardeMessageActivites(datetime.now()," Zone 1 ", "Gicleur_1_ON")
+        sauvegardeMessageActivites(datetime.now()," Zone 1 ", "Gicleur_1_ON")
     elif Requete == "Gicleur_1_OFF" and gicleurs["1"].ZoneActive==True:
         rpiMethodes.set_relais("1", False)   # arrête les gicleurs
         Requete=""
         redisInOut.setRequeteArrosageNil()
-        # sauvegardeMessageActivites(datetime.now()," Zone 1 ", "Gicleur_1_OFF")
+        sauvegardeMessageActivites(datetime.now()," Zone 1 ", "Gicleur_1_OFF")
     elif Requete == "Gicleur_2_ON" and ArrosageEnCour==False and gicleurs["2"].ZoneActive==True:
         rpiMethodes.set_relais("2", True)   # ouvre le gicleur pour arrosage
         Requete=""
         redisInOut.setRequeteArrosageNil()
-        # sauvegardeMessageActivites(datetime.now()," Zone 2 ", "Gicleur_2_ON")
+        sauvegardeMessageActivites(datetime.now()," Zone 2 ", "Gicleur_2_ON")
     elif Requete == "Gicleur_2_OFF" and gicleurs["2"].ZoneActive==True:
         rpiMethodes.set_relais("2", False)   # arrête les gicleurs
         Requete=""
         redisInOut.setRequeteArrosageNil()
-        # sauvegardeMessageActivites(datetime.now()," Zone 2 ", "Gicleur_2_OFF")
+        sauvegardeMessageActivites(datetime.now()," Zone 2 ", "Gicleur_2_OFF")
     elif Requete == "Gicleur_3_ON" and ArrosageEnCour==False and gicleurs["3"].ZoneActive==True:
         rpiMethodes.set_relais("3", True)   # ouvre le gicleur pour arrosage
         Requete=""
         redisInOut.setRequeteArrosageNil()
-        # sauvegardeMessageActivites(datetime.now()," Zone 3 ", "Gicleur_3_ON")
+        sauvegardeMessageActivites(datetime.now()," Zone 3 ", "Gicleur_3_ON")
     elif Requete == "Gicleur_3_OFF" and gicleurs["3"].ZoneActive==True:
         rpiMethodes.set_relais("3", False)   # arrête les gicleurs
         Requete=""
         redisInOut.setRequeteArrosageNil()
-        # sauvegardeMessageActivites(datetime.now()," Zone 3 ", "Gicleur_3_OFF")
+        sauvegardeMessageActivites(datetime.now()," Zone 3 ", "Gicleur_3_OFF")
     elif Requete == "Gicleur_4_ON" and ArrosageEnCour==False and gicleurs["4"].ZoneActive==True:
         rpiMethodes.set_relais("4", True)   # ouvre le gicleur pour arrosage
         Requete=""
         # redisInOut.setRequeteArrosageNil()
-        # sauvegardeMessageActivites(datetime.now()," Zone 4 ", "Gicleur_4_ON")
+        sauvegardeMessageActivites(datetime.now()," Zone 4 ", "Gicleur_4_ON")
     elif Requete == "Gicleur_4_OFF" and gicleurs["4"].ZoneActive==True:
         rpiMethodes.set_relais("4", False)   # arrête les gicleurs
         Requete=""
         redisInOut.setRequeteArrosageNil()
-        # sauvegardeMessageActivites(datetime.now()," Zone 4 ", "Gicleur_4_OFF")
+        sauvegardeMessageActivites(datetime.now()," Zone 4 ", "Gicleur_4_OFF")
 
 Requete=""
 
 
 donneesArrosage=dict()
 donneesArrosage=initializeDonneesGenerales(**donneesArrosage)
-gicleurEnCour = GICLEUR_EN_COUR()
+gicleurEnCour = dc.GICLEUR_EN_COUR()
 gicleursStatut=dict()
 gicleursStatut=initialiseGicleursStatut()
 
@@ -463,8 +457,8 @@ confGeneral=dict()
 # redisInOut.sauvegardeSystemeArrosageConfigurationGenerale(confGeneral)
 
 gicleurs=dict()
-# gicleurs=initialiaseGicleurs()
-# redisInOut.sauvegardeArrosageConfigurationGicleurs(gicleurs)
+gicleurs=initialiaseGicleurs()
+redisInOut.sauvegardeArrosageConfigurationGicleurs(gicleurs)
 
 
 confGeneral = redisInOut.recupereSystemeArrosageConfigurationGenerale()
@@ -481,7 +475,7 @@ if __name__ == '__main__':
     DateHeureCourante=datetime.now()
     DateHeureDebutIntervalle=datetime.now() + timedelta(days=-10)
 
-    sauvegardeMessageLogs("Systeme arrosage Montreal :" + "systeme demarre" )
+    sauvegardeMessageActivites(datetime.now(),"Systeme arrosage Montreal", "systeme demarre" )
 
     # t1 = threading.Thread(target=sendSystemeArrosageGicleursStatuts)
     # t1.start()
@@ -501,7 +495,7 @@ if __name__ == '__main__':
  
 
             for rec in donneesArrosage:
-                dataRec=ARROSAGE_DATA()
+                dataRec=dc.ARROSAGE_DATA()
                 dataRec=donneesArrosage[rec]
                 
                 # print (" valeurs : ",  dataRec.NoZone, ArrosageDemarre==False , dataRec.ArrosageTermine==False , dataRec.ArrosageEnCour==False , systemeArrosageEnCour==False , gicleurs[rec].ZoneActive==True, arrosageValide())
@@ -515,7 +509,7 @@ if __name__ == '__main__':
                     DateHeureDebutArrosage=datetime.now()
                     rpiMethodes.set_relais(dataRec.NoZone, True)   # ouvre le gicleur pour arrosage
                     print(" arrosage demarrer ", dataRec.NoZone)
-                    # sauvegardeMessageActivites(datetime.now(),gicleurEnCour.NoZone, "Arrosage en cours" )
+                    sauvegardeMessageActivites(datetime.now(),gicleurEnCour.NoZone, "Arrosage en cours" )
                     sleep(1)
                     donneesArrosage[dataRec.NoZone]=dataRec
                     reset6Heures=False
@@ -528,7 +522,7 @@ if __name__ == '__main__':
                     if (datetime.now()-gicleurEnCour.HeureDepartArrosage).seconds/60 >= int(gicleurs[str(gicleurEnCour.NoZone)].TempsArrosage):
                         # arret du gicleur
 
-                        dataRec=ARROSAGE_DATA()
+                        dataRec=dc.ARROSAGE_DATA()
                         dataRec=donneesArrosage[gicleurEnCour.NoZone]
                         dataRec.ArrosageTermine=True
                         dataRec.ArrosageEnCour=False
@@ -536,7 +530,7 @@ if __name__ == '__main__':
                         print(" arrosage arrete  ", dataRec.NoZone)
                         rpiMethodes.set_relais(dataRec.NoZone, False)   # arrête les gicleurs
                         sleep(1)
-                        # sauvegardeMessageActivites(datetime.now(),gicleurEnCour.NoZone, "Arrosage terminé" )
+                        sauvegardeMessageActivites(datetime.now(),gicleurEnCour.NoZone, "Arrosage terminé" )
 
                         sauvegardeMessageLogs("Systeme arrosage Montreal :" + str(gicleurEnCour.NoZone) +"  Arrosage terminé")
                         donneesArrosage[dataRec.NoZone]=dataRec
@@ -544,12 +538,12 @@ if __name__ == '__main__':
             
             if datetime.now().hour == 3 and reset6Heures == False:
                 for rec in donneesArrosage:
-                    dataRec=ARROSAGE_DATA()
+                    dataRec=dc.ARROSAGE_DATA()
                     dataRec=donneesArrosage[rec]
                     dataRec.ArrosageTermine=False 
                     dataRec.ArrosageEnCour=False
                     donneesArrosage[rec]=dataRec
-                # sauvegardeMessageActivites(datetime.now(),1-4, "Reset des gicleurs" )
+                sauvegardeMessageActivites(datetime.now(),1-4, "Reset des gicleurs" )
                 sleep(1)
                 sauvegardeMessageLogs("Systeme arrosage Montreal :" + " gicleurs reset 6 heures")
                 DateHeureDebutIntervalle=datetime.now() + timedelta(days=-1)
